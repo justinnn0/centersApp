@@ -1,0 +1,608 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf400
+{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue233;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c93333;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww21280\viewh10820\viewkind0
+\deftab720
+\pard\pardeftab720\sl280\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://rstudio.github.io/shinydashboard/structure.html"}}{\fldrslt 
+\f0\fs24 \cf2 \expnd0\expndtw0\kerning0
+\ul \ulc2 https://rstudio.github.io/shinydashboard/structure.html}}
+\f1\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+1: only with map\
+\
+library(shiny)\
+library(googleway)\
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+ui <- shiny::basicPage(\
+  \
+  div(\
+    textInput(inputId = "my_address", label = "")    \
+    ,textOutput(outputId = "copy_of_address")\
+    ,HTML(paste0("\
+                 <script>\
+                 function initAutocomplete() \{\
+                 new google.maps.places.Autocomplete(\
+                 (document.getElementById('my_address')),\
+                 \{types: ['geocode']\}\
+                 );\
+                 \}\
+                 </script>\
+                 <script src='https://maps.googleapis.com/maps/api/js?key=", key,"&libraries=places&callback=initAutocomplete'\
+                 async defer></script>\
+                 "))\
+    ,google_mapOutput(outputId = "my_map")\
+    )\
+  \
+    )\
+\
+server <- function(input, output) \{\
+  \
+  my_address <- reactive(\{\
+    input$my_address\
+  \})\
+  \
+  output$copy_of_address <- renderText(\{\
+    my_address()\
+  \})\
+  \
+  output$my_map <- renderGoogle_map(\{\
+    my_address <- my_address()\
+    validate(\
+      need(my_address, "Address not available")\
+    )\
+    \
+    df <- google_geocode(address = my_address)\
+    my_coords <- geocode_coordinates(df)\
+    my_coords <- c(my_coords$lat[1], my_coords$lng[1])\
+    \
+    google_map(\
+      location = my_coords,\
+      zoom = 12,\
+      map_type_control = FALSE,\
+      zoom_control = FALSE,\
+      street_view_control = FALSE\
+    )\
+  \})\
+  \
+\}\
+\
+shinyApp(ui, server)\
+\
+\
+2: Dashboard\
+\
+## app.R ##\
+library(shiny)\
+library(shinydashboard)\
+ui <- dashboardPage(\
+  dashboardHeader(title = "Basic dashboard"),\
+  dashboardSidebar(\
+    sidebarMenu(\
+      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),\
+      menuItem("Widgets", tabName = "widgets", icon = icon("th"))\
+    )\
+  ),\
+  dashboardBody(\
+    tabItems(\
+      # First tab content\
+      tabItem(tabName = "dashboard",\
+              fluidRow(\
+                box(plotOutput("plot1", height = 250)),\
+                \
+                box(\
+                  title = "Controls",\
+                  sliderInput("slider", "Number of observations:", 1, 100, 50)\
+                )\
+              )\
+      ),\
+      \
+      # Second tab content\
+      tabItem(tabName = "widgets",\
+              h2("Widgets tab content")\
+      )\
+    )\
+  )\
+)\
+\
+server <- function(input, output) \{\
+  set.seed(122)\
+  histdata <- rnorm(500)\
+  \
+  output$plot1 <- renderPlot(\{\
+    data <- histdata[seq_len(input$slider)]\
+    hist(data)\
+  \})\
+\}\
+\
+shinyApp(ui, server)\
+\
+3: dashboard with map\
+\
+\
+library(shiny)\
+library(shinydashboard)\
+library(googleway)\
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+ui <- dashboardPage(\
+  dashboardHeader(title = "Basic dashboard"),\
+  dashboardSidebar(\
+    sidebarMenu(\
+      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),\
+      menuItem("Widgets", tabName = "widgets", icon = icon("th"))\
+    )\
+  ),\
+  dashboardBody(\
+    div(\
+      textInput(inputId = "my_address", label = "")    \
+      ,textOutput(outputId = "copy_of_address")\
+      ,HTML(paste0("\
+                 <script>\
+                 function initAutocomplete() \{\
+                 new google.maps.places.Autocomplete(\
+                 (document.getElementById('my_address')),\
+                 \{types: ['geocode']\}\
+                 );\
+                 \}\
+                 </script>\
+                 <script src='https://maps.googleapis.com/maps/api/js?key=", key,"&libraries=places&callback=initAutocomplete'\
+                 async defer></script>\
+                 "))\
+      ,google_mapOutput(outputId = "my_map")\
+    ),\
+    \
+    \
+    tabItems(\
+      # First tab content\
+      tabItem(tabName = "dashboard",\
+              fluidRow(\
+                box(plotOutput("plot1", height = 250)),\
+                \
+                box(\
+                  title = "Controls",\
+                  sliderInput("slider", "Number of observations:", 1, 100, 50)\
+                )\
+              )\
+      ),\
+      \
+      # Second tab content\
+      tabItem(tabName = "widgets",\
+              h2("Widgets tab content")\
+      )\
+    )\
+  )\
+)\
+      \
+      \
+              \
+              \
+   \
+\
+\
+server <- function(input, output) \{\
+  set.seed(122)\
+  histdata <- rnorm(500)\
+  \
+  output$plot1 <- renderPlot(\{\
+    data <- histdata[seq_len(input$slider)]\
+    hist(data)\
+  \})\
+  \
+  my_address <- reactive(\{\
+    input$my_address\
+  \})\
+  \
+  output$copy_of_address <- renderText(\{\
+    my_address()\
+  \})\
+  \
+  output$my_map <- renderGoogle_map(\{\
+    my_address <- my_address()\
+    validate(\
+      need(my_address, "Address not available")\
+    )\
+    \
+    df <- google_geocode(address = my_address)\
+    my_coords <- geocode_coordinates(df)\
+    my_coords <- c(my_coords$lat[1], my_coords$lng[1])\
+    \
+    google_map(\
+      location = my_coords,\
+      zoom = 12,\
+      map_type_control = FALSE,\
+      zoom_control = FALSE,\
+      street_view_control = FALSE\
+    )\
+  \})\
+\}\
+\
+shinyApp(ui, server)\
+\
+4: data table\
+\
+    # search for Ma or Me\
+    datatable(\
+      centers, colnames = c('No' = 1),\
+      filter = list(position = 'top', clear = FALSE),\
+      options = list(\
+        search = list(regex = TRUE, caseInsensitive = FALSE, search = ''),\
+        pageLength = 2\
+      )\
+    )\
+\
+5: temp\
+\
+\
+\
+## app.R ##\
+library(shiny)\
+library(shinydashboard)\
+library(googleway)\
+library(DT)\
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+centers <- read.csv('test2_copy.csv')\
+mtcars2 = mtcars[, c(1:5, 9)]\
+mtcars2$am = factor(mtcars$am, c(0, 1), c('automatic', 'manual'))\
+\
+\
+ui <- dashboardPage(\
+  dashboardHeader(title = "Basic dashboard"),\
+  dashboardSidebar(\
+    sidebarMenu(\
+      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),\
+      menuItem("Widgets", tabName = "widgets", icon = icon("th"))\
+    )\
+  ),\
+  dashboardBody(\
+    \
+    \
+    # search for Ma or Me\
+    datatable(\
+      centers, colnames = c('No' = 1),\
+      filter = list(position = 'top', clear = FALSE),\
+      options = list(\
+        search = list(regex = TRUE, caseInsensitive = TRUE, search = ''),\
+        pageLength = 1\
+      )\
+    ),\
+    div(\
+      textInput(inputId = "my_address", label = "")    \
+      ,textOutput(outputId = "copy_of_address")\
+      ,HTML(paste0("\
+                 <script>\
+                 function initAutocomplete() \{\
+                 new google.maps.places.Autocomplete(\
+                 (document.getElementById('my_address')),\
+                 \{types: ['geocode']\}\
+                 );\
+                 \}\
+                 </script>\
+                 <script src='https://maps.googleapis.com/maps/api/js?key=", key,"&libraries=places&callback=initAutocomplete'\
+                 async defer></script>\
+                 "))\
+      ,google_mapOutput(outputId = "my_map")\
+    ),\
+    \
+    \
+    tabItems(\
+      # First tab content\
+      tabItem(tabName = "dashboard",\
+              fluidRow(\
+                box(plotOutput("plot1", height = 250)),\
+                \
+                box(\
+                  title = "Controls",\
+                  sliderInput("slider", "Number of observations:", 1, 100, 50)\
+                )\
+              )\
+      ),\
+      \
+      # Second tab content\
+      tabItem(tabName = "widgets",\
+              h2("Widgets tab content")\
+      )\
+    )\
+  )\
+)\
+      \
+      \
+              \
+              \
+   \
+\
+\
+server <- function(input, output) \{\
+  set.seed(122)\
+  histdata <- rnorm(500)\
+  \
+  output$plot1 <- renderPlot(\{\
+    data <- histdata[seq_len(input$slider)]\
+    hist(data)\
+  \})\
+  \
+  my_address <- reactive(\{\
+    input$my_address\
+  \})\
+  \
+  output$copy_of_address <- renderText(\{\
+    my_address()\
+  \})\
+  \
+  output$my_map <- renderGoogle_map(\{\
+    my_address <- my_address()\
+    validate(\
+      need(my_address, "Address not available")\
+    )\
+    \
+    df <- google_geocode(address = my_address)\
+    my_coords <- geocode_coordinates(df)\
+    my_coords <- c(my_coords$lat[1], my_coords$lng[1])\
+    \
+    google_map(\
+      location = my_coords,\
+      zoom = 12,\
+      map_type_control = FALSE,\
+      zoom_control = FALSE,\
+      street_view_control = FALSE\
+    )\
+  \})\
+\}\
+\
+shinyApp(ui, server)\
+\
+6: data table (print)\
+\
+library(shiny)\
+library(shinydashboard)\
+library(DT)\
+\
+ui <- dashboardPage(\
+  dashboardHeader(title = "Data Table Example"),\
+  dashboardSidebar(\
+    sidebarMenu(\
+      menuItem('Tabs', tabName='tabs',\
+               menuSubItem('Tab 1', tabName='tab1'),\
+               menuSubItem('Tab 2', tabName='tab2')\
+      )\
+    )\
+  ),\
+  \
+  dashboardBody(\
+    \
+    tabItems(\
+      tabItem(tabName='tab1',\
+              actionButton("import","Import"),\
+              br(),\
+              tags$div(tags$h3(tags$b("Get Selected Row Values",style="color: rgb(57,156,8)"))),\
+              br(),\
+              DT::dataTableOutput('ProductDataTable')\
+      ),\
+      tabItem(tabName='tab2',\
+              actionButton("display","Display"),\
+              uiOutput('info')\
+      )\
+    )\
+  )\
+)\
+\
+server <- function(input, output) \{\
+  \
+  observeEvent(input$import,\{\
+    \
+    Product <- mtcars\
+    \
+    output$ProductDataTable <- DT::renderDataTable(\{\
+      \
+      DT::datatable(Product,selection = "single",\
+                    # JS using call back function to get the row values on single click\
+                    callback = JS("table.on('click.dt', 'tr',\
+                                  function() \{\
+                                  Shiny.onInputChange('rows', table.rows(this).data().toArray());\
+                                  \});"),\
+\
+                    extensions = c('Buttons', 'ColReorder', 'FixedHeader', 'Scroller'),\
+                    rownames=FALSE,\
+                    options=list(dom = 'Bfrtip',\
+                                 searching = T,\
+                                 pageLength = 25,\
+                                 searchHighlight = TRUE,\
+                                 colReorder = TRUE,\
+                                 fixedHeader = TRUE,\
+                                 filter = 'bottom',\
+                                 buttons = c('copy', 'csv','excel', 'print'),\
+                                 paging    = TRUE,\
+                                 deferRender = TRUE,\
+                                 scroller = TRUE,\
+                                 scrollX = TRUE,\
+                                 scrollY = 700\
+                                 \
+                    ))\
+    \})\
+    \
+\})\
+  \
+  observeEvent(input$display,\{\
+    \
+    row_count <- input$ProductDataTable_rows_selected\
+    \
+    output$info <- renderPrint(\{\
+      cat('Row Selected 1st Col Value: ')\
+      # getting 1st row col value\
+      cat(input$rows[1], sep = ', ')\
+      \
+    \})\
+    \
+  \})\
+  \}\
+\
+shinyApp(ui, server)\
+\
+7: new datable\
+\
+\
+\
+## app.R ##\
+library(shiny)\
+library(shinydashboard)\
+library(googleway)\
+library(DT)\
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+centers <- read.csv('test2_copy.csv')\
+mtcars2 = mtcars[, c(1:5, 9)]\
+mtcars2$am = factor(mtcars$am, c(0, 1), c('automatic', 'manual'))\
+\
+\
+ui <- dashboardPage(\
+  dashboardHeader(title = "Basic dashboard"),\
+  dashboardSidebar(\
+    sidebarMenu(\
+      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),\
+      menuItem("Widgets", tabName = "widgets", icon = icon("th"))\
+    )\
+  ),\
+  dashboardBody(\
+    \
+    \
+    fluidRow(\
+      column(4,\
+             selectInput("postCode",\
+                         "postcode:",\
+                         c("All",\
+                           unique(as.character(centers$postCode))))\
+      ),\
+      column(4,\
+             selectInput("Religion",\
+                         "Religion:",\
+                         c("All",\
+                           unique(as.character(centers$RELIGION))))\
+      ),\
+      column(4,\
+             selectInput("Culture",\
+                         "Culture:",\
+                         c("All",\
+                           unique(as.character(centers$CULTURE))))\
+      )\
+    ),\
+    DT::dataTableOutput("table"),\
+   \
+  \
+    div(\
+      textInput(inputId = "my_address", label = "")    \
+      ,textOutput(outputId = "copy_of_address")\
+      ,HTML(paste0("\
+                   <script>\
+                   function initAutocomplete() \{\
+                   new google.maps.places.Autocomplete(\
+                   (document.getElementById('my_address')),\
+                   \{types: ['geocode']\}\
+                   );\
+                   \}\
+                   </script>\
+                   <script src='https://maps.googleapis.com/maps/api/js?key=", key,"&libraries=places&callback=initAutocomplete'\
+                   async defer></script>\
+                   "))\
+      ,google_mapOutput(outputId = "my_map")\
+      ),\
+    \
+    \
+    tabItems(\
+      # First tab content\
+      tabItem(tabName = "dashboard",\
+              fluidRow(\
+                box(plotOutput("plot1", height = 250)),\
+                \
+                box(\
+                  title = "Controls",\
+                  sliderInput("slider", "Number of observations:", 1, 100, 50)\
+                )\
+              )\
+      ),\
+      \
+      # Second tab content\
+      tabItem(tabName = "widgets",\
+              h2("Widgets tab content")\
+      )\
+    )\
+      )\
+      )\
+\
+\
+\
+\
+\
+\
+\
+server <- function(input, output) \{\
+  set.seed(122)\
+  histdata <- rnorm(500)\
+  \
+  output$plot1 <- renderPlot(\{\
+    data <- histdata[seq_len(input$slider)]\
+    hist(data)\
+  \})\
+  \
+  my_address <- reactive(\{\
+    input$my_address\
+  \})\
+  \
+  output$copy_of_address <- renderText(\{\
+    my_address()\
+  \})\
+  \
+  output$table <- DT::renderDataTable(DT::datatable(\{\
+    data <- centers\
+    if (input$postCode != "All") \{\
+      data <- data[data$postCode == input$postCode,]\
+    \}\
+    \
+    data\
+  \}))\
+  \
+  output$my_map <- renderGoogle_map(\{\
+    my_address <- my_address()\
+    validate(\
+      need(my_address, "Address not available")\
+    )\
+    \
+    df <- google_geocode(address = my_address)\
+    my_coords <- geocode_coordinates(df)\
+    my_coords <- c(my_coords$lat[1], my_coords$lng[1])\
+    \
+    google_map(\
+      location = my_coords,\
+      zoom = 12,\
+      map_type_control = FALSE,\
+      zoom_control = FALSE,\
+      street_view_control = FALSE\
+      \
+     \
+    )\
+  \})\
+\}\
+\
+shinyApp(ui, server)\
+\
+\
+\
+\
+}
