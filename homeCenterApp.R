@@ -44,8 +44,21 @@ ui <- dashboardPage(
                          c("All",
                            unique(as.character(centers$CULTURE))))
       )
+      ,
+      column(4,
+             selectInput("Address",
+                         "Address:",
+                         c("All",
+                           unique(as.character(centers$Address))))
+      )
     ),
     DT::dataTableOutput("table"),
+    column(3, verbatimTextOutput('x4')),
+    
+   
+    textOutput("celltext"),
+    
+    
    
   
     div(
@@ -104,21 +117,61 @@ server <- function(input, output) {
   })
   
   my_address <- reactive({
-    input$my_address
+    #input$my_address
+    #centers[['Address']][1]
+    #input$Address
+    #output$celltext
+    centers[input$table_cells_selected]
   })
   
   output$copy_of_address <- renderText({
     my_address()
   })
   
-  output$table <- DT::renderDataTable(DT::datatable({
-    data <- centers
-    if (input$postCode != "All") {
-      data <- data[data$postCode == input$postCode,]
-    }
+#  output$table <- DT::renderDataTable(DT::datatable({
+ #   data <- centers
+  #  if (input$postCode != "All") {
+   #   data <- data[data$postCode == input$postCode,]
+  #  }
     
-    data
-  }))
+   # data
+#  }))
+  
+  #
+  output$table <- DT::renderDataTable(centers, 
+                                            selection=list(mode="single",target="cell"),
+                                            server = FALSE,
+                                            rownames=FALSE
+  )
+  
+  #output$selectedCells <- renderPrint(input$table_cells_selected)
+  output$celltext <- renderText({
+    #cell <- input$table_cells_selected
+    centers <- centers[input$table_cells_selected]
+  })
+  
+  #
+  
+  selectedRow <- eventReactive(input$table_rows_selected,{
+    row.names(centers)[c(input$table_rows_selected)]
+  })
+  
+  output$selected <- renderText({ 
+    selectedRow()
+  })
+  
+  output$address <- renderText({ 
+    table['Address']
+  })
+  output$x4 = renderPrint({
+    s = input$table_rows_selected
+    if (length(s)) {
+      cat('These rows were selected:\n\n')
+      cat(s['Address'])
+      cat(s, sep = ', ')
+      
+    }
+  })
   
   output$my_map <- renderGoogle_map({
     my_address <- my_address()
@@ -138,7 +191,7 @@ server <- function(input, output) {
       street_view_control = FALSE
       
      
-    )
+    ) 
   })
 }
 

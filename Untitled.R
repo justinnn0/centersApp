@@ -17,3 +17,14 @@ datatable(
   )
 )
 
+centers[2,14]
+typeof(centers)
+typeof(mtcars)
+
+mtcars[2,3]
+
+centersFrame <- as.data.frame(centers, header=TRUE)
+
+typeof(centersFrame)
+
+centersFrame[3,14]
