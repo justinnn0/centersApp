@@ -28,3 +28,22 @@ centersFrame <- as.data.frame(centers, header=TRUE)
 typeof(centersFrame)
 
 centersFrame[3,14]
+
+
+df <- google_geocode(address = "49-51 STANLEY Street,BANKSTOWN,NSW,2200,Australia")
+df
+typeof(df)
+my_coords <- geocode_coordinates(df)
+my_coords
+typeof(my_coords)
+my_coords$lat[1]
+typeof(my_coords$lng[1])
+
+my_coords <- c(my_coords$lat[1], my_coords$lng[1])
+
+my_coords
+my_coords[1]
+my_coords[2]
+my_coords2 <- data.frame(my_coords)
+typeof(my_coords2)
+
