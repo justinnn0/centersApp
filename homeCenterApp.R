@@ -15,8 +15,6 @@ google_keys()
 
 centers <- read.csv('test2_copy.csv')
 
-
-
 ui <- navbarPage(
   
   title = 'Home care centers', id = 'x0',
@@ -27,18 +25,6 @@ ui <- navbarPage(
            leafletOutput("sitemap"),
            
     DT::dataTableOutput("table")
-   
-    
-   
-   
-    
-
-    
-    
-  
-      
-   
-
   ),
   tabPanel('Show all', 
            
@@ -48,43 +34,71 @@ ui <- navbarPage(
 )
 )
 
-
-
-
-
-
-
 server <- function(input, output) {
   
 #
-  output$table <- DT::renderDataTable(centers, 
-                                            selection='single',
-                                            server = FALSE,
-                                            rownames=FALSE
-                          
-                                     
-  )
+  datatable = datatable(centers, 
+            selection='single',
+            extensions = c('Responsive','Buttons','FixedHeader','Scroller'),
+            
+        
+            rownames=FALSE,
+            #options = list(searchHighlight = TRUE)
+            options = list(searchHighlight = TRUE,dom = 'Bfrtip',
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),fixedHeader = TRUE,deferRender = TRUE,
+                           scrollY = 500,
+                           scroller = TRUE,
+              initComplete = JS(
+                "function(settings, json) {",
+                "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                "}")
+            )
+           ) %>%formatStyle('No', backgroundColor = 'lightblue', fontWeight = 'bold') %>%
+    formatStyle('Name', backgroundColor = 'white', fontWeight = 'bold')%>%
+    formatStyle('Address', backgroundColor = 'lightblue', fontWeight = 'bold') %>%
+    formatStyle('Culture', backgroundColor = 'white', fontWeight = 'bold')%>%
+    
+    formatStyle('Religion', backgroundColor = 'lightblue', fontWeight = 'bold')%>%
+    formatStyle('Language', backgroundColor = 'white', fontWeight = 'bold') %>%
+    formatStyle('Services', backgroundColor = 'lightblue', fontWeight = 'bold')%>%
+    formatStyle('State', backgroundColor = 'white', fontWeight = 'bold') %>%
+    formatStyle('Postcode', backgroundColor = 'lightblue', fontWeight = 'bold')%>%
+    formatStyle('Latitude', backgroundColor = 'white', fontWeight = 'bold') %>%
+    formatStyle('Longitude', backgroundColor = 'lightblue', fontWeight = 'bold')%>%
+    formatStyle('Phone', backgroundColor = 'white', fontWeight = 'bold') %>%
+    formatStyle('Website', backgroundColor = 'lightblue', fontWeight = 'bold')
   
-
+  output$table <- renderDataTable(datatable) 
+  #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')
+  
  #
   observeEvent(input$table_rows_selected,{
-    centersfiltered <- centers %>% filter(No == input$table_rows_selected)
-    
-    map = leaflet(data=centersfiltered ) %>% 
-      addTiles() %>% setView(151.2093,-33.8688,zoom = 3)%>%  
-      addMarkers(~longitude,~latitude,popup=~as.character(OUTLET_NAME))
-    output$sitemap = renderLeaflet(map)
-    
-  })
+      if(!is.null(input$table_rows_selected))
+      {
+      centersfiltered <- centers %>% filter(No == input$table_rows_selected)
+      
+      map = leaflet(data=centersfiltered ) %>% 
+        addTiles() %>%  
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))
+      output$sitemap = renderLeaflet(map)
+      }
+    else
+    {
+      mapAll = leaflet(data=centers ) %>% 
+        addTiles() %>% setView(151.2093,-33.8688,zoom = 12)%>%  
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))
+      output$sitemap = renderLeaflet(mapAll)
+      
+    }
+      
+  },ignoreNULL = FALSE)
   #
-  
-  
   
   #
   
   mapAll = leaflet(data=centers ) %>% 
     addTiles() %>% setView(151.2093,-33.8688,zoom = 8)%>%  
-    addMarkers(~longitude,~latitude,popup=~as.character(OUTLET_NAME))
+    addMarkers(~Longitude,~Latitude,popup=~as.character(Name))
   output$allMap = renderLeaflet(mapAll)
   
   
@@ -92,16 +106,7 @@ server <- function(input, output) {
     row.names(centers)[c(input$table_rows_selected)]
   })
   
-  #
-  observeEvent(input$allMap_marker_click, { 
-    p <- input$allMap_marker_click  # typo was on this line
-    print(p)
-  })
-  #
-  
-  
-  
-  
+ 
 
 }
 
