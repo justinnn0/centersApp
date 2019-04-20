@@ -15,22 +15,66 @@ google_keys()
 
 centers <- read.csv('test2_copy.csv')
 
-ui <- navbarPage(
+ui <- fluidPage(tags$head(tags$style(
+  HTML('
+         #sidebar {
+            background-color: white;
+        }
+
+        body, label, input, button, select { 
+          font-family: "Arial";
+        }'))),
+  tags$head(tags$style(
+    type="text/css",
+    "#img img {max-width: 100%; width: 100%; height: auto}"
+  )),
+ 
   
-  title = 'Home care centers', id = 'x0',
+  sidebarLayout(
+   
+    
+    sidebarPanel(id="sidebar",
+      
+      img(id="img",src = "LogoBlue.png", height = 200, width=400),
+      
+      #h3( em("Home Care Centers in Australia"), align = "center")
+      h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),
+      h4("1: Click + to see the detailed information and the location on the map.",align = "left",style = "color:navy",font="Times New Roman"),
+      
+      
+      h4("2: Search by postcode, culture, language, religion, and services. Just type in the search box. Examples: ",align = "left",style = "color:navy",font="Times New Roman"),
+      h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),
+      h5("- 2200",align = "left",style = "color:navy",font="Times New Roman"),
+      h5("- Italian 2200",align = "left",style = "color:navy",font="Times New Roman"),
+      h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),
+      h5("- Dementia Spanish 2200",align = "left",style = "color:navy",font="Times New Roman"),
+      
+      h4("3: Export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),
+      
+     
+      
+     
+      
   
-  tabPanel('Search',
-    
-    
-           leafletOutput("sitemap"),
+
+    mainPanel(
+      
+      leafletOutput("sitemap"),
+      DT::dataTableOutput("table")
+     
+      
+      
+    )  
+          #h1( em("Home Care Centers in Australia"), align = "center"),
+          #h5("Click the home care center name to see the location on the map",align = "left",style = "color:blue"),
            
-    DT::dataTableOutput("table")
-  ),
-  tabPanel('Show all', 
+          
+          
+           #h5("Search by postcode, culture, language, religion, and services. Just type in the search  box",align = "right",style = "color:blue"),
            
-           leafletOutput("allMap")
-           
-           
+          
+  
+
 )
 )
 
@@ -43,10 +87,11 @@ server <- function(input, output) {
             
         
             rownames=FALSE,
+           
             #options = list(searchHighlight = TRUE)
-            options = list(searchHighlight = TRUE,dom = 'Bfrtip',
+            options = list(searchHighlight = TRUE,dom = 'Bfrtip',pageLength=5,
                            buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),fixedHeader = TRUE,deferRender = TRUE,
-                           scrollY = 500,
+                           scrollY = 200,
                            scroller = TRUE,
               initComplete = JS(
                 "function(settings, json) {",
@@ -79,14 +124,20 @@ server <- function(input, output) {
       
       map = leaflet(data=centersfiltered ) %>% 
         addTiles() %>%  
-        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+        addEasyButton(easyButton(
+          icon="fa-crosshairs", title="Locate Me",
+          onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
       output$sitemap = renderLeaflet(map)
       }
     else
     {
       mapAll = leaflet(data=centers ) %>% 
-        addTiles() %>% setView(151.2093,-33.8688,zoom = 12)%>%  
-        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))
+        addTiles() %>% setView(151.2093,-33.8688,zoom = 10)%>%  
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+        addEasyButton(easyButton(
+          icon="fa-crosshairs", title="Locate Me",
+          onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
       output$sitemap = renderLeaflet(mapAll)
       
     }

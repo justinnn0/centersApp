@@ -1,0 +1,13 @@
+name: homecenter
+title: homecenter
+username:
+account: justinnn
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 878482
+bundleId: 2025396
+url: https://justinnn.shinyapps.io/homecenter/
+when: 1555776813.59195
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Untitled.R|Untitled.rtf|Untitled3.R
