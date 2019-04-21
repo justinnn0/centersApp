@@ -35,7 +35,7 @@ ui <- fluidPage(tags$head(tags$style(
     
     sidebarPanel(id="sidebar",
       
-      img(id="img",src = "LogoBlue.png", height = 200, width=400),
+      img(id="img",src = "LogoBlue3.png", height = 300, width=400),
       
       #h3( em("Home Care Centers in Australia"), align = "center")
       h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),
@@ -65,12 +65,6 @@ ui <- fluidPage(tags$head(tags$style(
       
       
     )  
-          #h1( em("Home Care Centers in Australia"), align = "center"),
-          #h5("Click the home care center name to see the location on the map",align = "left",style = "color:blue"),
-           
-          
-          
-           #h5("Search by postcode, culture, language, religion, and services. Just type in the search  box",align = "right",style = "color:blue"),
            
           
   
