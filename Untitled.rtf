@@ -1,16 +1,811 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf400
 {\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue233;}
-{\*\expandedcolortbl;;\cssrgb\c0\c0\c93333;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue233;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c0\c93333;}
 \paperw11900\paperh16840\margl1440\margr1440\vieww21280\viewh10820\viewkind0
 \deftab720
 \pard\pardeftab720\sl280\partightenfactor0
-{\field{\*\fldinst{HYPERLINK "https://rstudio.github.io/shinydashboard/structure.html"}}{\fldrslt 
+
 \f0\fs24 \cf2 \expnd0\expndtw0\kerning0
-\ul \ulc2 https://rstudio.github.io/shinydashboard/structure.html}}
-\f1\fs24 \
+22\
+\
+\
+## app.R ##\
+library(shiny)\
+library(shinydashboard)\
+library(googleway)\
+library(DT)\
+library(leaflet)\
+library(datasets)\
+library(dplyr)\
+library(magrittr)\
+#library(readr)\
+\
+#install.packages('stringr')\
+#txt.tmp <- str_replace_all(conteudo_do_tweet,"[^[:graph:]]", " ") \
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+#readr::read_csv\
+centers <- read.csv('GeocodedHomeCare3.csv', encoding="UTF-8", stringsAsFactors=FALSE)\
+\
+\
+\
+ui <- fluidPage(tags$head(tags$style(\
+  HTML('\
+       #sidebar \{\
+       background-color: white;\
+       \}\
+       \
+       body, label, input, button, select \{ \
+       font-family: "Arial";\
+       \}'))),\
+  tags$head(tags$style(\
+    type="text/css",\
+    "#img img \{max-width: 100%; width: 100%; height: auto\}"\
+  )),\
+  \
+  \
+  sidebarLayout(\
+    \
+    \
+    sidebarPanel(id="sidebar",\
+                 \
+                 img(id="img",src = "LogoBlue3.png", height = 300, width=400),\
+                 \
+                 #h3( em("Home Care Centers in Australia"), align = "center")\
+                 h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),\
+                 h4("1: Click + to see the detailed information and the location on the map.",align = "left",style = "color:navy",font="Times New Roman"),\
+                 \
+                 \
+                 h4("2: Search by postcode, culture, language, religion, and services. Just type in the search box. Examples: ",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Italian 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Dementia Spanish 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 \
+                 h4("3: Export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),\
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    mainPanel(\
+      \
+      leafletOutput("sitemap"),\
+ \
+      DT::dataTableOutput("table")\
+     # verbatimTextOutput("selectedCells")\
+      \
+      \
+      \
+    )  \
+    \
+    \
+    \
+    \
+  )\
+)\
+\
+server <- function(input, output) \{\
+\
+  \
+  \
+  #\
+  \
+  \
+  output$table <- renderDataTable(\{\
+ \
+    \
+    \
+    datatable(\
+              centers, \
+              selection='single',\
+              extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),\
+              \
+              \
+              rownames=FALSE,\
+              #fixedHeader = TRUE,keys = TRUE,\
+              #options = list(searchHighlight = TRUE)\
+              #filter = 'top',\
+              #dom = 'Bfrtip',\
+              #searchHighlight = TRUE\
+      \
+              options = list(\
+                              columnDefs = list(list(targets = c(0,1,2,9,10,11,12,13), searchable = FALSE)),\
+                             scrollX = TRUE,\
+                             dom = 'Bfrtip',\
+                            \
+                             \
+                             pageLength=5,\
+                             buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),deferRender = TRUE,\
+                             scrollY = 200,\
+                             scroller = TRUE,\
+                            \
+                             search = list( caseInsensitive = FALSE),\
+                             initComplete = JS(\
+                               "function(settings, json) \{",\
+                               "$(this.api().table().header()).css(\{'background-color': '#000', 'color': '#fff'\});",\
+                               "\}")\
+              )\
+    ) %>%formatStyle('No', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%\
+      formatStyle('Name', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%\
+      formatStyle('Address', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%\
+      formatStyle('Culture', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%\
+      \
+      formatStyle('Religion', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%\
+      formatStyle('Language', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%\
+      formatStyle('Services', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%\
+      formatStyle('State', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%\
+      formatStyle('Postcode', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%\
+      formatStyle('Latitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%\
+      formatStyle('Longitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%\
+      formatStyle('Phone', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%\
+      formatStyle('Website', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")\
+  \})\
+  \
+  \
+   \
+  \
+  \
+  output$selectedCells <- renderPrint(input$table_rows_selected)\
+  #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')\
+  \
+  #\
+  observeEvent(input$table_rows_selected,\{\
+    if(!is.null(input$table_rows_selected))\
+    \{\
+    \
+      #\
+     \
+      \
+      centersfiltered <- centers %>% filter(No == input$table_rows_selected)\
+      #\
+      \
+      map = leaflet(data=centersfiltered ) %>% \
+        addTiles() %>%  \
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      #\
+      output$sitemap = renderLeaflet(map)\
+      \
+    \}\
+    else\
+    \{\
+      mapAll = leaflet(data=centers ) %>% \
+        addTiles() %>% setView(144.96332,-37.814,zoom = 10)%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      \
+      #%>%  \
+      # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+      output$sitemap = renderLeaflet(mapAll)\
+      \
+    \}\
+    \
+  \},ignoreNULL = FALSE)\
+  #\
+  \
+  #\
+  \
+  mapAll = leaflet(data=centers ) %>% \
+    addTiles() %>% setView(151.2093,-33.8688,zoom = 8)%>%  \
+    addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+  output$allMap = renderLeaflet(mapAll)\
+  \
+  \
+  selectedRow <- eventReactive(input$table_rows_selected,\{\
+    row.names(centers)[c(input$table_rows_selected)]\
+  \})\
+  \
+  \
+  \
+\}\
+\
+shinyApp(ui, server)\
+\
+\
+\
+21: has duplicated data, not disable column search \
+\
+## app.R ##\
+library(shiny)\
+library(shinydashboard)\
+library(googleway)\
+library(DT)\
+library(leaflet)\
+library(datasets)\
+library(dplyr)\
+library(magrittr)\
+#library(readr)\
+\
+#install.packages('stringr')\
+#txt.tmp <- str_replace_all(conteudo_do_tweet,"[^[:graph:]]", " ") \
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+#readr::read_csv\
+centers <- read.csv('GeocodedHomeCare3.csv', encoding="UTF-8", stringsAsFactors=FALSE)\
+\
+\
+\
+ui <- fluidPage(tags$head(tags$style(\
+  HTML('\
+       #sidebar \{\
+       background-color: white;\
+       \}\
+       \
+       body, label, input, button, select \{ \
+       font-family: "Arial";\
+       \}'))),\
+  tags$head(tags$style(\
+    type="text/css",\
+    "#img img \{max-width: 100%; width: 100%; height: auto\}"\
+  )),\
+  \
+  \
+  sidebarLayout(\
+    \
+    \
+    sidebarPanel(id="sidebar",\
+                 \
+                 img(id="img",src = "LogoBlue3.png", height = 300, width=400),\
+                 \
+                 #h3( em("Home Care Centers in Australia"), align = "center")\
+                 h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),\
+                 h4("1: Click + to see the detailed information and the location on the map.",align = "left",style = "color:navy",font="Times New Roman"),\
+                 \
+                 \
+                 h4("2: Search by postcode, culture, language, religion, and services. Just type in the search box. Examples: ",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Italian 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Dementia Spanish 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 \
+                 h4("3: Export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),\
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    mainPanel(\
+      \
+      leafletOutput("sitemap"),\
+      fluidRow(\
+        column(4,\
+               selectInput("State",\
+                           "State:",\
+                           c("All",\
+                             unique(as.character(centers$State))))\
+        ),\
+        column(4,\
+               selectInput("Postcode",\
+                           "Postcode:",\
+                           c("All",\
+                             unique(as.character(centers$Postcode))))\
+        )),\
+      DT::dataTableOutput("table"),\
+      verbatimTextOutput("selectedCells")\
+      \
+      \
+      \
+    )  \
+    \
+    \
+    \
+    \
+  )\
+)\
+\
+server <- function(input, output) \{\
+\
+  \
+  \
+  #\
+  \
+  \
+  output$table <- renderDataTable(\{\
+    \
+    filteredPostcode <-\
+      centers %>%\
+      filter(\
+        Postcode == input$Postcode \
+        \
+      )\
+    \
+    \
+    datatable(\
+              centers, \
+              selection='single',\
+              extensions = c('Responsive','Buttons','FixedHeader','Scroller'),\
+              \
+              \
+              rownames=FALSE,\
+              \
+              #options = list(searchHighlight = TRUE)\
+              options = list(searchHighlight = TRUE,dom = 'Bfrtip',pageLength=5,\
+                             buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),fixedHeader = TRUE,deferRender = TRUE,\
+                             scrollY = 200,\
+                             scroller = TRUE,\
+                             search = list( caseInsensitive = FALSE),\
+                             initComplete = JS(\
+                               "function(settings, json) \{",\
+                               "$(this.api().table().header()).css(\{'background-color': '#000', 'color': '#fff'\});",\
+                               "\}")\
+              )\
+    ) %>%formatStyle('No', backgroundColor = 'lightblue', fontWeight = 'bold') %>%\
+      formatStyle('Name', backgroundColor = 'white', fontWeight = 'bold')%>%\
+      formatStyle('Address', backgroundColor = 'lightblue', fontWeight = 'bold') %>%\
+      formatStyle('Culture', backgroundColor = 'white', fontWeight = 'bold')%>%\
+      \
+      formatStyle('Religion', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('Language', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Services', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('State', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Postcode', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('Latitude', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Longitude', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('Phone', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Website', backgroundColor = 'lightblue', fontWeight = 'bold')\
+  \})\
+  \
+  \
+   \
+  \
+  \
+  output$selectedCells <- renderPrint(input$table_rows_selected)\
+  #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')\
+  \
+  #\
+  observeEvent(input$table_rows_selected,\{\
+    if(!is.null(input$table_rows_selected))\
+    \{\
+     # info = input$table_cell_clicked\
+      # do nothing if not clicked yet, or the clicked cell is not in the 1st column\
+     # if (is.null(info$value) || info$col != 0) \
+     # \{\
+        \
+      #\
+     \
+      \
+      centersfiltered <- centers %>% filter(No == input$table_rows_selected)\
+      #\
+      \
+      map = leaflet(data=centersfiltered ) %>% \
+        addTiles() %>%  \
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      #\
+      output$sitemap = renderLeaflet(map)\
+      #return()\
+    \}\
+    else\
+    \{\
+      mapAll = leaflet(data=centers ) %>% \
+        addTiles() %>% setView(151.2093,-33.8688,zoom = 10)%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      \
+      #%>%  \
+      # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+      output$sitemap = renderLeaflet(mapAll)\
+      \
+    \}\
+    \
+  \},ignoreNULL = FALSE)\
+  #\
+  \
+  #\
+  \
+  mapAll = leaflet(data=centers ) %>% \
+    addTiles() %>% setView(151.2093,-33.8688,zoom = 8)%>%  \
+    addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+  output$allMap = renderLeaflet(mapAll)\
+  \
+  \
+  selectedRow <- eventReactive(input$table_rows_selected,\{\
+    row.names(centers)[c(input$table_rows_selected)]\
+  \})\
+  \
+  \
+  \
+\}\
+\
+shinyApp(ui, server)\
+\
+\
+20:\
+\
+## app.R ##\
+library(shiny)\
+library(shinydashboard)\
+library(googleway)\
+library(DT)\
+library(leaflet)\
+library(datasets)\
+library(dplyr)\
+library(magrittr)\
+#library(readr)\
+\
+#install.packages('stringr')\
+#txt.tmp <- str_replace_all(conteudo_do_tweet,"[^[:graph:]]", " ") \
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+#readr::read_csv\
+centers <- read.csv('GeocodedHomeCare3.csv', encoding="UTF-8", stringsAsFactors=FALSE)\
+\
+\
+ui <- fluidPage(tags$head(tags$style(\
+  HTML('\
+       #sidebar \{\
+       background-color: white;\
+       \}\
+       \
+       body, label, input, button, select \{ \
+       font-family: "Arial";\
+       \}'))),\
+  tags$head(tags$style(\
+    type="text/css",\
+    "#img img \{max-width: 100%; width: 100%; height: auto\}"\
+  )),\
+  \
+  \
+  sidebarLayout(\
+    \
+    \
+    sidebarPanel(id="sidebar",\
+                 \
+                 img(id="img",src = "LogoBlue3.png", height = 300, width=400),\
+                 \
+                 #h3( em("Home Care Centers in Australia"), align = "center")\
+                 h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),\
+                 h4("1: Click + to see the detailed information and the location on the map.",align = "left",style = "color:navy",font="Times New Roman"),\
+                 \
+                 \
+                 h4("2: Search by postcode, culture, language, religion, and services. Just type in the search box. Examples: ",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Italian 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),\
+                 h5("- Dementia Spanish 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+                 \
+                 h4("3: Export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),\
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    mainPanel(\
+      \
+      leafletOutput("sitemap"),\
+      fluidRow(\
+        column(4,\
+               selectInput("Postcode",\
+                           "Postcode:",\
+                           c("All",\
+                             unique(as.character(centers$Postcode))))\
+        )),\
+      DT::dataTableOutput("table")\
+      \
+      \
+      \
+    )  \
+    \
+    \
+    \
+    \
+  )\
+)\
+\
+server <- function(input, output) \{\
+  \
+  \
+  \
+ \
+  \
+  \
+ \
+  #\
+ \
+  \
+  output$table <- renderDataTable(\{\
+    filtered <-\
+      centers %>%\
+      filter(\
+        Postcode == input$Postcode\
+        \
+      )\
+    \
+    datatable(filtered, \
+              selection='single',\
+              extensions = c('Responsive','Buttons','FixedHeader','Scroller'),\
+              \
+              \
+              rownames=FALSE,\
+              \
+              #options = list(searchHighlight = TRUE)\
+              options = list(searchHighlight = TRUE,dom = 'Bfrtip',pageLength=5,\
+                             buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),fixedHeader = TRUE,deferRender = FALSE,\
+                             scrollY = 200,\
+                             scroller = TRUE,\
+                             search = list( caseInsensitive = FALSE),\
+                             initComplete = JS(\
+                               "function(settings, json) \{",\
+                               "$(this.api().table().header()).css(\{'background-color': '#000', 'color': '#fff'\});",\
+                               "\}")\
+              )\
+    ) %>%formatStyle('No', backgroundColor = 'lightblue', fontWeight = 'bold') %>%\
+      formatStyle('Name', backgroundColor = 'white', fontWeight = 'bold')%>%\
+      formatStyle('Address', backgroundColor = 'lightblue', fontWeight = 'bold') %>%\
+      formatStyle('Culture', backgroundColor = 'white', fontWeight = 'bold')%>%\
+      \
+      formatStyle('Religion', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('Language', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Services', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('State', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Postcode', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('Latitude', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Longitude', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+      formatStyle('Phone', backgroundColor = 'white', fontWeight = 'bold') %>%\
+      formatStyle('Website', backgroundColor = 'lightblue', fontWeight = 'bold')\
+  \})\
+    \
+    \
+    \
+     \
+  #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')\
+  \
+  #\
+  observeEvent(input$table_rows_selected,\{\
+    if(!is.null(input$table_rows_selected))\
+    \{\
+      centersfiltered <- centers %>% filter(No == input$table_rows_selected)\
+      \
+      map = leaflet(data=centersfiltered ) %>% \
+        addTiles() %>%  \
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      output$sitemap = renderLeaflet(map)\
+    \}\
+    else\
+    \{\
+      mapAll = leaflet(data=centers ) %>% \
+        addTiles() %>% setView(151.2093,-33.8688,zoom = 10)%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      \
+      #%>%  \
+      # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+      output$sitemap = renderLeaflet(mapAll)\
+      \
+    \}\
+    \
+  \},ignoreNULL = FALSE)\
+  #\
+  \
+  #\
+  \
+  mapAll = leaflet(data=centers ) %>% \
+    addTiles() %>% setView(151.2093,-33.8688,zoom = 8)%>%  \
+    addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+  output$allMap = renderLeaflet(mapAll)\
+  \
+  \
+  selectedRow <- eventReactive(input$table_rows_selected,\{\
+    row.names(centers)[c(input$table_rows_selected)]\
+  \})\
+  \
+  \
+  \
+\}\
+\
+shinyApp(ui, server)\cf3 \ul \
+\
+\
+\cf2 \ulnone \
+\
+\
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f1 \cf0 \kerning1\expnd0\expndtw0 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\pardirnatural\partightenfactor0
 \cf0 \
+\
+## app.R ##\
+library(shiny)\
+library(shinydashboard)\
+library(googleway)\
+library(DT)\
+library(leaflet)\
+library(datasets)\
+library(dplyr)\
+library(magrittr)\
+#library(readr)\
+\
+#install.packages('stringr')\
+#txt.tmp <- str_replace_all(conteudo_do_tweet,"[^[:graph:]]", " ") \
+\
+key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"\
+set_key(key = key)\
+google_keys()\
+\
+#readr::read_csv\
+centers <- read.csv('GeocodedHomeCare3.csv', encoding="UTF-8", stringsAsFactors=FALSE)\
+\
+\
+ui <- fluidPage(tags$head(tags$style(\
+  HTML('\
+         #sidebar \{\
+            background-color: white;\
+        \}\
+\
+        body, label, input, button, select \{ \
+          font-family: "Arial";\
+        \}'))),\
+  tags$head(tags$style(\
+    type="text/css",\
+    "#img img \{max-width: 100%; width: 100%; height: auto\}"\
+  )),\
+ \
+  \
+  sidebarLayout(\
+   \
+    \
+    sidebarPanel(id="sidebar",\
+      \
+      img(id="img",src = "LogoBlue3.png", height = 300, width=400),\
+      \
+      #h3( em("Home Care Centers in Australia"), align = "center")\
+      h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),\
+      h4("1: Click + to see the detailed information and the location on the map.",align = "left",style = "color:navy",font="Times New Roman"),\
+      \
+      \
+      h4("2: Search by postcode, culture, language, religion, and services. Just type in the search box. Examples: ",align = "left",style = "color:navy",font="Times New Roman"),\
+      h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),\
+      h5("- 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+      h5("- Italian 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+      h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),\
+      h5("- Dementia Spanish 2200",align = "left",style = "color:navy",font="Times New Roman"),\
+      \
+      h4("3: Export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),\
+      \
+     \
+      \
+     \
+      \
+  \
+\
+    mainPanel(\
+      \
+      leafletOutput("sitemap"),\
+      DT::dataTableOutput("table")\
+     \
+      \
+      \
+    )  \
+           \
+          \
+  \
+\
+)\
+)\
+\
+server <- function(input, output) \{\
+  \
+#\
+  datatable = datatable(centers, \
+            selection='single',\
+            extensions = c('Responsive','Buttons','FixedHeader','Scroller'),\
+            \
+        \
+            rownames=FALSE,\
+           \
+            #options = list(searchHighlight = TRUE)\
+            options = list(searchHighlight = TRUE,dom = 'Bfrtip',pageLength=5,\
+                           buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),fixedHeader = TRUE,deferRender = FALSE,\
+                           scrollY = 200,\
+                           scroller = TRUE,\
+                           search = list( caseInsensitive = FALSE),\
+              initComplete = JS(\
+                "function(settings, json) \{",\
+                "$(this.api().table().header()).css(\{'background-color': '#000', 'color': '#fff'\});",\
+                "\}")\
+            )\
+           ) %>%formatStyle('No', backgroundColor = 'lightblue', fontWeight = 'bold') %>%\
+    formatStyle('Name', backgroundColor = 'white', fontWeight = 'bold')%>%\
+    formatStyle('Address', backgroundColor = 'lightblue', fontWeight = 'bold') %>%\
+    formatStyle('Culture', backgroundColor = 'white', fontWeight = 'bold')%>%\
+    \
+    formatStyle('Religion', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+    formatStyle('Language', backgroundColor = 'white', fontWeight = 'bold') %>%\
+    formatStyle('Services', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+    formatStyle('State', backgroundColor = 'white', fontWeight = 'bold') %>%\
+    formatStyle('Postcode', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+    formatStyle('Latitude', backgroundColor = 'white', fontWeight = 'bold') %>%\
+    formatStyle('Longitude', backgroundColor = 'lightblue', fontWeight = 'bold')%>%\
+    formatStyle('Phone', backgroundColor = 'white', fontWeight = 'bold') %>%\
+    formatStyle('Website', backgroundColor = 'lightblue', fontWeight = 'bold')\
+  \
+  output$table <- renderDataTable(datatable) \
+  #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')\
+  \
+ #\
+  observeEvent(input$table_rows_selected,\{\
+      if(!is.null(input$table_rows_selected))\
+      \{\
+      centersfiltered <- centers %>% filter(No == input$table_rows_selected)\
+      \
+      map = leaflet(data=centersfiltered ) %>% \
+        addTiles() %>%  \
+        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      output$sitemap = renderLeaflet(map)\
+      \}\
+    else\
+    \{\
+      mapAll = leaflet(data=centers ) %>% \
+        addTiles() %>% setView(151.2093,-33.8688,zoom = 10)%>%\
+        addEasyButton(easyButton(\
+          icon="fa-crosshairs", title="Locate Me",\
+          onClick=JS("function(btn, map)\{ map.locate(\{setView: true\}); \}")))\
+      \
+      #%>%  \
+       # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+      output$sitemap = renderLeaflet(mapAll)\
+      \
+    \}\
+      \
+  \},ignoreNULL = FALSE)\
+  #\
+  \
+  #\
+  \
+  mapAll = leaflet(data=centers ) %>% \
+    addTiles() %>% setView(151.2093,-33.8688,zoom = 8)%>%  \
+    addMarkers(~Longitude,~Latitude,popup=~as.character(Name))\
+  output$allMap = renderLeaflet(mapAll)\
+  \
+  \
+  selectedRow <- eventReactive(input$table_rows_selected,\{\
+    row.names(centers)[c(input$table_rows_selected)]\
+  \})\
+  \
+ \
+\
+\}\
+\
+shinyApp(ui, server)\
+\
+\
+\
+\
+\
 \
 \
 1: only with map\
@@ -843,10 +1638,10 @@ ui <- dashboardPage(\
                            unique(as.character(centers$postCode))))\
       ),\
       column(4,\
-             selectInput("Religion",\
-                         "Religion:",\
+             selectInput(\'93State\'94,\
+                         \'93State:\'94,\
                          c("All",\
-                           unique(as.character(centers$RELIGION))))\
+                           unique(as.character(centers$S))))\
       ),\
       column(4,\
              selectInput("Culture",\
