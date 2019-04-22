@@ -47,17 +47,21 @@ ui <- fluidPage(tags$head(tags$style(
                  
                  #h3( em("Home Care Centers in Australia"), align = "center")
                  h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),
-                 h4("1: Click + to see the detailed information and the location on the map.",align = "left",style = "color:navy",font="Times New Roman"),
+                 h4("1: Select or enter your postcode.",align = "left",style = "color:navy",font="Times New Roman"),
+                
+                 h4("2: Click + to see the detailed information.",align = "left",style = "color:navy",font="Times New Roman"),
                  
                  
-                 h4("2: Search by postcode, culture, language, religion, and services. Just type in the search box. Examples: ",align = "left",style = "color:navy",font="Times New Roman"),
+                 h4("3:You can search by culture, language, religion, and services. Just type in the search box (case sensitive). Examples: ",align = "left",style = "color:navy",font="Times New Roman"),
+                 
                  h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),
-                 h5("- 2200",align = "left",style = "color:navy",font="Times New Roman"),
-                 h5("- Italian 2200",align = "left",style = "color:navy",font="Times New Roman"),
+                 h5("- Catholic",align = "left",style = "color:navy",font="Times New Roman"),
+      
                  h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),
-                 h5("- Dementia Spanish 2200",align = "left",style = "color:navy",font="Times New Roman"),
+                 h5("- Dementia Spanish",align = "left",style = "color:navy",font="Times New Roman"),
+                
                  
-                 h4("3: Export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),
+                 h4("4: You can export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),
     
     
     
@@ -68,9 +72,19 @@ ui <- fluidPage(tags$head(tags$style(
     mainPanel(
       
       leafletOutput("sitemap"),
- 
+      fluidRow(
+        
+        column(4,
+               selectInput("Postcode",
+                           "Postcode:",
+                           c(
+                             sort(unique(as.character(centers$Postcode)))),selected =2000)
+        )),
+      
+      
+      
       DT::dataTableOutput("table")
-     # verbatimTextOutput("selectedCells")
+      # verbatimTextOutput("selectedCells")
       
       
       
@@ -83,46 +97,50 @@ ui <- fluidPage(tags$head(tags$style(
 )
 
 server <- function(input, output) {
-
+  
   
   
   #
   
   
   output$table <- renderDataTable({
- 
+    filteredPostcode <- centers %>%
+      filter(
+        Postcode == input$Postcode)
+    
+    
     
     
     datatable(
-              centers, 
-              selection='single',
-              extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
-              
-              
-              rownames=FALSE,
-              #fixedHeader = TRUE,keys = TRUE,
-              #options = list(searchHighlight = TRUE)
-              #filter = 'top',
-              #dom = 'Bfrtip',
-              #searchHighlight = TRUE
+      filteredPostcode, 
+      selection='single',
+      extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
       
-              options = list(
-                              columnDefs = list(list(targets = c(0,1,2,9,10,11,12,13), searchable = FALSE)),
-                             scrollX = TRUE,
-                             dom = 'Bfrtip',
-                            
-                             
-                             pageLength=5,
-                             buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),deferRender = TRUE,
-                             scrollY = 200,
-                             scroller = TRUE,
-                            
-                             search = list( caseInsensitive = FALSE),
-                             initComplete = JS(
-                               "function(settings, json) {",
-                               "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
-                               "}")
-              )
+      
+      rownames=FALSE,
+      #fixedHeader = TRUE,keys = TRUE,
+      #options = list(searchHighlight = TRUE)
+      #filter = 'top',
+      #dom = 'Bfrtip',
+      #searchHighlight = TRUE
+      
+      options = list(
+        columnDefs = list(list(targets = c(0,1,2,9,10,11,12,13), searchable = FALSE)),
+        scrollX = TRUE,
+        dom = 'Bfrtip',
+        
+        
+        pageLength=5,
+        buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),deferRender = TRUE,
+        scrollY = 200,
+        scroller = TRUE,
+        
+        search = list( caseInsensitive = FALSE),
+        initComplete = JS(
+          "function(settings, json) {",
+          "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+          "}")
+      )
     ) %>%formatStyle('No', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
       formatStyle('Name', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
       formatStyle('Address', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
@@ -140,48 +158,39 @@ server <- function(input, output) {
   })
   
   
-   
+  
   
   
   output$selectedCells <- renderPrint(input$table_rows_selected)
   #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')
   
   #
-  observeEvent(input$table_rows_selected,{
-    if(!is.null(input$table_rows_selected))
+  
+  #
+  
+  
+  #centersfiltered <- centers %>% filter(No == input$table_rows_all)
+  #
+  
+  
+  #
+  output$sitemap = renderLeaflet(
     {
-    
-      #
-     
+      filteredPostcode2 <- centers %>%
+        filter(
+          Postcode == input$Postcode)
       
-      centersfiltered <- centers %>% filter(No == input$table_rows_selected)
-      #
+      #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
       
-      map = leaflet(data=centersfiltered ) %>% 
+      leaflet(data=filteredPostcode2 ) %>% 
         addTiles() %>%  
         addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
         addEasyButton(easyButton(
           icon="fa-crosshairs", title="Locate Me",
           onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
-      #
-      output$sitemap = renderLeaflet(map)
-      
-    }
-    else
-    {
-      mapAll = leaflet(data=centers ) %>% 
-        addTiles() %>% setView(144.96332,-37.814,zoom = 10)%>%
-        addEasyButton(easyButton(
-          icon="fa-crosshairs", title="Locate Me",
-          onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
-      
-      #%>%  
-      # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))
-      output$sitemap = renderLeaflet(mapAll)
-      
-    }
-    
-  },ignoreNULL = FALSE)
+    })
+  
+  
   #
   
   #
@@ -201,4 +210,5 @@ server <- function(input, output) {
 }
 
 shinyApp(ui, server)
+
 

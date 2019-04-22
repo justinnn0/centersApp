@@ -5,9 +5,9 @@ account: justinnn
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 878482
-bundleId: 2025917
+bundleId: 2029955
 url: https://justinnn.shinyapps.io/homecenter/
-when: 1555804258.68776
+when: 1555952891.74238
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: Untitled.R|Untitled.rtf|Untitled3.R
+ignoredFiles: test2_copy.csv|Untitled.R|Untitled.rtf|Untitled3.R
