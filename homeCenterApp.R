@@ -124,10 +124,19 @@ ui <- fluidPage(tags$head(tags$style(
              align='center'),align='center'),
       
       leafletOutput("sitemap"),
+    
       
       
-      DT::dataTableOutput("table")
-      # verbatimTextOutput("selectedCells")
+      DT::dataTableOutput("table"),
+      h4( em("Select a name or address from the above table to search on Google"), align = "left",style = "color:navy",font="Times New Roman"),
+      uiOutput(outputId = "ggoogle"),
+      
+      uiOutput("tab"),
+      uiOutput(outputId = "ggmap"),
+      uiOutput("tabggmap")
+       #verbatimTextOutput("selectedCells")
+      #box(google_mapOutput("myGMap") )
+      
       
     )  
     
@@ -135,6 +144,14 @@ ui <- fluidPage(tags$head(tags$style(
 )
 
 server <- function(input, output) {
+  
+  output$ggmap <- renderUI({
+    tags$img(src = "ggmap.png")
+  })
+  
+  output$ggoogle <- renderUI({
+    tags$img(src = "ggoogle.png")
+  })
   
   
   
@@ -164,11 +181,11 @@ server <- function(input, output) {
       #searchHighlight = TRUE
       
       options = list(
-        columnDefs = list(list(targets = c(0,1,6,8,9,10,11,12,13), searchable = FALSE)),
+        columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
         scrollX = TRUE,
         dom = 'Bfrtip',
         pageLength=5,
-        buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),deferRender = TRUE,
+        buttons = c('copy','pdf', 'print'),deferRender = TRUE,
         scrollY = 200,
         scroller = TRUE,
         search = list( caseInsensitive = FALSE),
@@ -187,7 +204,7 @@ server <- function(input, output) {
       formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
       formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
       formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-      formatStyle('Phone', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+      
       formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
     formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
     
@@ -224,11 +241,11 @@ server <- function(input, output) {
           #searchHighlight = TRUE
           
           options = list(
-            columnDefs = list(list(targets = c(0,1,6,8,9,10,11,12,13), searchable = FALSE)),
+            columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
             scrollX = TRUE,
             dom = 'Bfrtip',
             pageLength=5,
-            buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),deferRender = TRUE,
+            buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
             scrollY = 150,
             scroller = TRUE,
             search = list( caseInsensitive = FALSE),
@@ -247,10 +264,14 @@ server <- function(input, output) {
           formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
           formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
           formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Phone', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+         
           formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
           formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
       })
+      
+      # google map
+      #
+    
       
       
     })
@@ -289,11 +310,11 @@ server <- function(input, output) {
           #searchHighlight = TRUE
           
           options = list(
-            columnDefs = list(list(targets = c(0,1,6,8,9,10,11,12,13), searchable = FALSE)),
+            columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
             scrollX = TRUE,
             dom = 'Bfrtip',
             pageLength=5,
-            buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),deferRender = TRUE,
+            buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
             scrollY = 150,
             scroller = TRUE,
             search = list( caseInsensitive = FALSE),
@@ -312,12 +333,42 @@ server <- function(input, output) {
           formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
           formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
           formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Phone', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+           
           formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
           formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
       })
       
   })
+    
+    # dt cell - google map 
+    
+    observe({
+      req(input$table_cell_clicked)
+      
+       # sstring <- "https://www.google.com/search?cr=countryAU&q="+input$table_cell_clicked
+      #https://www.google.com/search?cr=countryAU&q=St Louis Home Care
+      #https://www.google.com/maps/place/
+      output$selectedCells <- renderPrint(input$table_cell_clicked$value)
+      sstring <- paste("https://www.google.com/search?cr=countryAU&q=", as.character(input$table_cell_clicked$value))
+        
+        url <- a(as.character(input$table_cell_clicked$value), href= sstring)
+        output$tab <- renderUI({
+          tagList( "Search", url)
+        })
+        
+        sstring2 <- paste("https://www.google.com/maps/place/", as.character(input$table_cell_clicked$value))
+        url2 <- a(as.character(input$table_cell_clicked$value), href= sstring2)
+        output$tabggmap <- renderUI({
+          tagList( "Search", url2)
+        })
+        
+        
+  
+        
+        
+       # centersfiltered <- filteredPostcode %>% filter(No == input$table_cell_clicked$value)
+      
+    })
   
 
   
@@ -349,7 +400,8 @@ server <- function(input, output) {
      
      # file <- "LogoBlue3.png"
       #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-     # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
+      #URL <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
+    #  URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
       
       filteredPostcode2 <- as.data.frame(filteredPostcode2)
       leaflet(data=filteredPostcode2) %>% 
@@ -357,6 +409,7 @@ server <- function(input, output) {
         addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
         #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
         #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = " ">"))%>%
+       # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL, ">"))%>%
         
        
         addEasyButton(easyButton(
@@ -389,13 +442,16 @@ server <- function(input, output) {
             filteredClickLan <- as.data.frame(filteredClickLan)
              # file <- "LogoBlue3.png"
              # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-              
+            #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
+            
             #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
+            # img(id="img26",src = "allReligion.png", height = 40, width=80),
             
             leaflet(data=filteredClickLan) %>% 
               addTiles() %>%  
               addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
              #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
+             # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
               
               addEasyButton(easyButton(
                 icon="fa-crosshairs", title="Locate Me",
@@ -430,26 +486,39 @@ server <- function(input, output) {
             filteredClickreli2 <- as.data.frame( filteredClickreli2)
             # file <- "LogoBlue3.png"
             # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-            
+            #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
             #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-            
-            leaflet(data= filteredClickreli2) %>% 
-              addTiles() %>%  
-              addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-              #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
-              
+            #src = "allReligion.png", height = 40, width=80
+            #input$sitemap_marker_click$lat & Longitude == input$sitemap_marker_click$lng
+            ### hear to show pic of place####
+            leaflet(data= filteredClickreli2) %>% addTiles() %>% 
+               addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+              #addTiles() %>%  addMarkers(~Longitude,~Latitude,popup =~paste0("<img src = ", URL, ">"))
+                 
               addEasyButton(easyButton(
                 icon="fa-crosshairs", title="Locate Me",
                 onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
+              
+              #addMarkers(lng = ~Longitude, ~Latitude, popup = 
+               #            ~paste0('https://www.google.com/maps/dir/', 
+                #                   ~Latitude,",",~Longitude,"/",
+                 #                  ~Latitude,",", 
+                  #                 ~Longitude))%>%
+              #addCircles(lng =  ~Longitude, lat = ~Latitude, popup = ~Name, label = "current location", color = "red", weight = 15)
+          })
+             # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+              #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
+              #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
+            
           })
         
         
       })
     })
     })
-   })
+#})
    
-  #click marker
+  #click marker dt
   observe({
    
     req(input$sitemap_marker_click)
@@ -474,11 +543,11 @@ server <- function(input, output) {
         #searchHighlight = TRUE
         
         options = list(
-          columnDefs = list(list(targets = c(0,1,6,8,9,10,11,12,13), searchable = FALSE)),
+          columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
           scrollX = TRUE,
           dom = 'Bfrtip',
           pageLength=5,
-          buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),deferRender = TRUE,
+          buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
           scrollY = 150,
           scroller = TRUE,
           search = list( caseInsensitive = FALSE),
@@ -497,10 +566,18 @@ server <- function(input, output) {
         formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
         formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
         formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-        formatStyle('Phone', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+       
         formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
         formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
     })
+    
+    #Gmap
+  #  output$myGMap <- renderGoogle_map({
+   #   google_map(location = c(input$sitemap_marker_click$lat, input$sitemap_marker_click$lng), key = key, search_box = T,zoom = 12, split_view = "pano", street_view_control = TRUE,update_map_view = TRUE)
+  #  })
+   
+#https://maps.google.com/maps/contrib/105726604263661011813/photos
+   
     
     #religion 
   }) 
