@@ -1,5 +1,4 @@
 
-
 ## app.R ##
 library(shiny)
 library(shinydashboard)
@@ -39,7 +38,7 @@ ui <- fluidPage(
     type="text/css",
     "#img img {max-width: 100%; width: 100%; height: auto}"
     )),
-                                           
+  
   
   sidebarLayout(
     
@@ -47,111 +46,110 @@ ui <- fluidPage(
     
     sidebarPanel(id="sidebar",setBackgroundColor("#222222"),
                  
-               radioButtons("rbLanguage",  HTML("<h3 style='color:white;'>Culture & Language:</h3>"),
-                            choiceNames = list(
-                              
-                              HTML("<p style='color:white;'>English</p>"),
-                              HTML("<p style='color:white;'>中文</p>"),
-                              HTML("<p style='color:white;'>Italiano</p>"),
-                              HTML("<p style='color:white;'>हिंदी</p>"),
-                              HTML("<p style='color:white;'>Русский</p>"),
-                              HTML("<p style='color:white;'>Deutsche</p>"),
-                              HTML("<p style='color:white;'>Ελληνικά</p>"),
-                              HTML("<p style='color:white;'> Tiếng Việt</p>"),
-                              HTML("<p style='color:white;'>日本語</p>"), 
-                              HTML("<p style='color:white;'>한국어</p>"),
-                              HTML("<p style='color:white;'>Español</p>"),
-                              HTML("<p style='color:white;'> français</p>"),
-                              HTML("<p style='color:white;'> عربى</p>"),
-                              HTML("<p style='color:white;'>All</p>")
-                              #img(id="img9",src = "English.png", height = 40, width=80),
-                              #img(id="img10",src = "Italian.png", height = 40, width=80),
-                              #img(id="img11",src = "Chinese.png", height = 40, width=80),
-                            ),
-                            choiceValues = list(
-                              "English", "Chinese", "Italian","Hindi", "Russian", "German","Greek","Vietnamese","Japanese","Korean","Spanish","French","Arabic","English"
-                            ),selected="English"
-               ),
-               radioButtons("rbreligion",  HTML("<h3 style='color:white;'>Religion:</h3>"),
-                            choiceNames = list(
-                              HTML('<img id="img26" src="allReligion.png" height=40 px width=80 px"><label style="color:white">All</label></img>'),
-                              HTML('<img id="img26" src="Catholic.png" height=40 px width=80 px"><label style="color:white">Catholic</label></img>'),
-                              HTML('<img id="img26" src="Buddism.png" height=40 px width=80 px"><label style="color:white">Buddism</label></img>'),
-                              HTML('<img id="img26" src="Islam.png" height=40 px width=80 px"><label style="color:white">Islam</label></img>'),
-                              HTML('<img id="img26" src="Judaism.png" height=40 px width=80 px"><label style="color:white">Judaism</label></img>'),
-                              HTML('<img id="img26" src="Hinduism.png" height=40 px width=80 px"><label style="color:white">Hinduism</label></img>'),
-                              HTML('<img id="img26" src="Eastern_orthodox.png" height=40 px width=80 px"><label style="color:white">Eastern orthodox</label></img>'),
-                              HTML('<img id="img26" src="Lutheran.png" height=40 px width=80 px"><label style="color:white">Lutheran</label></img>')
-
+                 radioButtons("rbLanguage",  HTML("<h3 style='color:white;'>Culture & Language:</h3>"),
+                              choiceNames = list(
+                                HTML("<p style='color:white;'>English</p>"),
+                                HTML("<p style='color:white;'>中文</p>"),
+                                HTML("<p style='color:white;'>Italiano</p>"),
+                                HTML("<p style='color:white;'>हिंदी</p>"),
+                                HTML("<p style='color:white;'>Русский</p>"),
+                                HTML("<p style='color:white;'>Deutsche</p>"),
+                                HTML("<p style='color:white;'>Ελληνικά</p>"),
+                                HTML("<p style='color:white;'> Tiếng Việt</p>"),
+                                HTML("<p style='color:white;'>日本語</p>"), 
+                                HTML("<p style='color:white;'>한국어</p>"),
+                                HTML("<p style='color:white;'>Español</p>"),
+                                HTML("<p style='color:white;'> français</p>"),
+                                HTML("<p style='color:white;'> عربى</p>")
+                                #  HTML("<p style='color:white;'>All</p>")
+                                #img(id="img9",src = "English.png", height = 40, width=80),
+                                #img(id="img10",src = "Italian.png", height = 40, width=80),
+                                #img(id="img11",src = "Chinese.png", height = 40, width=80),
                               ),
-                            
-                            
-                            choiceValues = list(
-                              "allReligion","Catholic", "Buddism", "Islam","Judaism", "Hinduism", "Eastern Orthodox","Lutheran"
-                            ),selected="allReligion"
-               )
-               
+                              choiceValues = list(
+                                "English","Chinese","Italian","Hindi","Russian","German","Greek","Vietnamese","Japanese","Korean","Spanish","French","Arabic"
+                              ),selected="English"
+                 ),
+                 radioButtons("rbreligion",  HTML("<h3 style='color:white;'>Religion:</h3>"),
+                              choiceNames = list(
+                                HTML('<img id="img26" src="allReligion.png" height=40 px width=80 px"><label style="color:white">All</label></img>'),
+                                HTML('<img id="img26" src="Catholic.png" height=40 px width=80 px"><label style="color:white">Catholic</label></img>'),
+                                HTML('<img id="img26" src="Buddism.png" height=40 px width=80 px"><label style="color:white">Buddism</label></img>'),
+                                HTML('<img id="img26" src="Islam.png" height=40 px width=80 px"><label style="color:white">Islam</label></img>'),
+                                HTML('<img id="img26" src="Judaism.png" height=40 px width=80 px"><label style="color:white">Judaism</label></img>'),
+                                HTML('<img id="img26" src="Hinduism.png" height=40 px width=80 px"><label style="color:white">Hinduism</label></img>'),
+                                HTML('<img id="img26" src="Eastern_orthodox.png" height=40 px width=80 px"><label style="color:white">Eastern orthodox</label></img>'),
+                                HTML('<img id="img26" src="Lutheran.png" height=40 px width=80 px"><label style="color:white">Lutheran</label></img>')
+                                
+                              ),
+                              
+                              
+                              choiceValues = list(
+                                "allReligion","Catholic", "Buddism", "Islam","Judaism", "Hinduism", "Eastern Orthodox","Lutheran"
+                              ),selected="allReligion"
+                 )
                  
-                
-
-),
-
-                 
-                 #h3( em("Home Care Centers in Australia"), align = "center")
-                 #h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),
-                # h4("1: Select or enter your postcode.",align = "left",style = "color:navy",font="Times New Roman"),
-                
-                # h4("1: Click + to see the detailed information.",align = "left",style = "color:navy",font="Times New Roman"),
-                # h4("2: To search for other culture and religion just type in the search box below the the map",align = "left",style = "color:navy",font="Times New Roman"),
                  
                  
                  
-                # h4("3: You can search by culture, language, religion, and services. Just type in the search box (case sensitive). Examples: ",align = "left",style = "color:navy",font="Times New Roman"),
-                 
-               #  h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),
-                # h5("- Catholic",align = "left",style = "color:navy",font="Times New Roman"),
-      
-               #  h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),
-               #  h5("- Dementia Spanish",align = "left",style = "color:navy",font="Times New Roman"),
-                
-                 
-               #  h4("4: You can export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),
+    ),
+    
+    
+    #h3( em("Home Care Centers in Australia"), align = "center")
+    #h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),
+    # h4("1: Select or enter your postcode.",align = "left",style = "color:navy",font="Times New Roman"),
+    
+    # h4("1: Click + to see the detailed information.",align = "left",style = "color:navy",font="Times New Roman"),
+    # h4("2: To search for other culture and religion just type in the search box below the the map",align = "left",style = "color:navy",font="Times New Roman"),
+    
+    
+    
+    # h4("3: You can search by culture, language, religion, and services. Just type in the search box (case sensitive). Examples: ",align = "left",style = "color:navy",font="Times New Roman"),
+    
+    #  h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),
+    # h5("- Catholic",align = "left",style = "color:navy",font="Times New Roman"),
+    
+    #  h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),
+    #  h5("- Dementia Spanish",align = "left",style = "color:navy",font="Times New Roman"),
+    
+    
+    #  h4("4: You can export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),
     
     
     mainPanel(
       
       fluidRow(
-     
-      column(4,
-             selectInput("Postcode",
-                         HTML("<h3 style='color:white;'>Postcode</h3>"),
-                         c(
-                           sort(unique(as.character(centers$Postcode)))),selected =2000),
-             align='center'),align='center'),
+        
+        column(4,
+               selectInput("Postcode",
+                           HTML("<h3 style='color:white;'>Postcode</h3>"),
+                           c(
+                             sort(unique(as.character(centers$Postcode)))),selected =2000),
+               align='center'),align='center'),
       
       leafletOutput("sitemap"),
-    
+      
       
       
       DT::dataTableOutput("table"),
       h3("Click and select a name or address from the above table to search on Google", align = "left",style = "color:white",font="Times New Roman"),
-     # uiOutput(outputId = "ggoogle"),
+      # uiOutput(outputId = "ggoogle"),
       
-     # uiOutput("tab"),
+      # uiOutput("tab"),
       fluidRow( 
         column(6, uiOutput("tab"),uiOutput(outputId = "ggoogle")),
         column(6,uiOutput("tabggmap"),uiOutput(outputId = "ggmap")
-               )) 
-     # uiOutput(outputId = "ggmap"),
+        )) 
+      # uiOutput(outputId = "ggmap"),
       #uiOutput("tabggmap")
-       #verbatimTextOutput("selectedCells")
+      #verbatimTextOutput("selectedCells")
       #box(google_mapOutput("myGMap") )
       
       
     )  
     
   )
-)
+  )
 
 server <- function(input, output) {
   
@@ -170,206 +168,205 @@ server <- function(input, output) {
   observe({
     
     req(input$Postcode)
-     
     
-  
-  output$table <- DT::renderDataTable({
     
-    filteredPostcode <- centers %>%
-      filter(
-        Postcode == input$Postcode)
-    filteredPostcode <- as.data.frame(filteredPostcode)
-    datatable(
-      filteredPostcode, 
-      selection='single',
-      extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
-      rownames=FALSE,
-      #fixedHeader = TRUE,keys = TRUE,
-      #options = list(searchHighlight = TRUE)
-      #filter = 'top',
-      #dom = 'Bfrtip',
-      #searchHighlight = TRUE
+    
+    output$table <- DT::renderDataTable({
       
-      
-      options = list(
-        searching=FALSE,
+      filteredPostcode <- centers %>%
+        filter(
+          Postcode == input$Postcode)
+      filteredPostcode <- as.data.frame(filteredPostcode)
+      datatable(
+        filteredPostcode, 
+        selection='single',
+        extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
+        rownames=FALSE,
+        #fixedHeader = TRUE,keys = TRUE,
+        #options = list(searchHighlight = TRUE)
+        #filter = 'top',
+        #dom = 'Bfrtip',
+        #searchHighlight = TRUE
         
-       # columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
-        scrollX = TRUE,
-        dom = 'Bfrtip',
-        pageLength=5,
-        buttons = c('copy','pdf', 'print'),deferRender = TRUE,
-        scrollY = 200,
-        scroller = TRUE,
-        search = list( caseInsensitive = FALSE),
-        initComplete = JS(
-          "function(settings, json) {",
-          "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
-          "}")
-      )
-    ) %>%formatStyle('Name', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-      formatStyle('Address', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-      formatStyle('Culture', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-      formatStyle('Religion', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-      formatStyle('Language', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-      formatStyle('Services', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-      formatStyle('State', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-      formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-      formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-      formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-      
-      formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-    formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
-    
-    
-    observe({
-      
-      req(input$rbLanguage)
-      
-      
-      output$table <- DT::renderDataTable({
         
-        if ( input$rbLanguage == "English")
-        {
-          filteredClickLan <- filteredPostcode
-        }
-        else
-        {
+        options = list(
+          searching=FALSE,
           
-          filteredClickLan <- filteredPostcode %>%
-            filter( grepl(input$rbLanguage, Language) || grepl(input$rbLanguage, Culture)
+          # columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+          scrollX = TRUE,
+          dom = 'Bfrtip',
+          pageLength=5,
+          buttons = c('copy','pdf', 'print'),deferRender = TRUE,
+          scrollY = 200,
+          scroller = TRUE,
+          search = list( caseInsensitive = FALSE),
+          initComplete = JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+            "}")
+        )
+      ) %>%formatStyle('Name', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+        formatStyle('Address', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+        formatStyle('Culture', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+        formatStyle('Religion', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+        formatStyle('Language', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+        formatStyle('Services', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+        formatStyle('State', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+        formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+        formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+        formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+        
+        formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+        formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
+      
+      
+      observe({
+        
+        req(input$rbLanguage)
+        
+        
+        output$table <- DT::renderDataTable({
+          
+          if ( input$rbLanguage == "English")
+          {
+            filteredClickLan <- filteredPostcode
+          }
+          else
+          {
+            
+            filteredClickLan <- filteredPostcode %>%
+              filter( grepl(input$rbLanguage, Language ) | grepl(input$rbLanguage, Culture ))              
+          }
+          
+          filteredClickLan <- as.data.frame(filteredClickLan)
+          datatable(
+            filteredClickLan, 
+            selection='single',
+            extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
+            rownames=FALSE,
+            #fixedHeader = TRUE,keys = TRUE,
+            #options = list(searchHighlight = TRUE)
+            #filter = 'top',
+            #dom = 'Bfrtip',
+            #searchHighlight = TRUE
+            
+            
+            options = list(
+              searching= FALSE,
+              #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+              scrollX = TRUE,
+              dom = 'Bfrtip',
+              pageLength=5,
+              buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
+              scrollY = 150,
+              scroller = TRUE,
+              search = list( caseInsensitive = FALSE),
+              initComplete = JS(
+                "function(settings, json) {",
+                "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                "}")
             )
-        }
+          ) %>%formatStyle('Name', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Address', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('Culture', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Religion', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('Language', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Services', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('State', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            
+            formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
+        })
         
-        filteredClickLan <- as.data.frame(filteredClickLan)
-        datatable(
-          filteredClickLan, 
-          selection='single',
-          extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
-          rownames=FALSE,
-          #fixedHeader = TRUE,keys = TRUE,
-          #options = list(searchHighlight = TRUE)
-          #filter = 'top',
-          #dom = 'Bfrtip',
-          #searchHighlight = TRUE
-         
-          
-          options = list(
-            searching= FALSE,
-            #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
-            scrollX = TRUE,
-            dom = 'Bfrtip',
-            pageLength=5,
-            buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
-            scrollY = 150,
-            scroller = TRUE,
-            search = list( caseInsensitive = FALSE),
-            initComplete = JS(
-              "function(settings, json) {",
-              "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
-              "}")
-          )
-        ) %>%formatStyle('Name', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Address', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Culture', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Religion', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Language', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Services', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('State', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-         
-          formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
+        # google map
+        #
+        
+        
+        
       })
       
-      # google map
-      #
-    
+      #religion dt
       
-      
-    })
-    
-    #religion dt
-    
-    observe({
-      
-      req(input$rbreligion)
-      
-      
-      output$table <- DT::renderDataTable({
+      observe({
         
-        if ( input$rbreligion == "allReligion")
-        {
-          filteredClickreli <- filteredPostcode
-        }
-        else
-        {
+        req(input$rbreligion)
+        
+        
+        output$table <- DT::renderDataTable({
           
-          filteredClickreli <- filteredPostcode %>%
-            filter( grepl(input$rbreligion, Religion) 
+          if ( input$rbreligion == "allReligion")
+          {
+            filteredClickreli <- filteredPostcode
+          }
+          else
+          {
+            
+            filteredClickreli <- filteredPostcode %>%
+              filter( grepl(input$rbreligion, Religion) 
+              )
+          }
+          
+          filteredClickreli <- as.data.frame(filteredClickreli)
+          datatable(
+            filteredClickreli, 
+            selection='single',
+            extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
+            rownames=FALSE,
+            #fixedHeader = TRUE,keys = TRUE,
+            #options = list(searchHighlight = TRUE)
+            #filter = 'top',
+            #dom = 'Bfrtip',
+            #searchHighlight = TRUE
+            
+            
+            options = list(
+              searching= FALSE,
+              #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+              scrollX = TRUE,
+              dom = 'Bfrtip',
+              pageLength=5,
+              buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
+              scrollY = 150,
+              scroller = TRUE,
+              search = list( caseInsensitive = FALSE),
+              initComplete = JS(
+                "function(settings, json) {",
+                "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+                "}")
             )
-        }
+          ) %>%formatStyle('Name', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Address', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('Culture', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Religion', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('Language', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Services', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('State', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
+            formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            
+            formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
+            formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
+        })
         
-        filteredClickreli <- as.data.frame(filteredClickreli)
-        datatable(
-          filteredClickreli, 
-          selection='single',
-          extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
-          rownames=FALSE,
-          #fixedHeader = TRUE,keys = TRUE,
-          #options = list(searchHighlight = TRUE)
-          #filter = 'top',
-          #dom = 'Bfrtip',
-          #searchHighlight = TRUE
-          
-          
-          options = list(
-            searching= FALSE,
-            #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
-            scrollX = TRUE,
-            dom = 'Bfrtip',
-            pageLength=5,
-            buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
-            scrollY = 150,
-            scroller = TRUE,
-            search = list( caseInsensitive = FALSE),
-            initComplete = JS(
-              "function(settings, json) {",
-              "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
-              "}")
-          )
-        ) %>%formatStyle('Name', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Address', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Culture', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Religion', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Language', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Services', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('State', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
-          formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-           
-          formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-          formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
       })
       
-  })
-    
-    # dt cell - google map 
-    
-    observe({
-      req(input$table_cell_clicked)
+      # dt cell - google map 
       
-       # sstring <- "https://www.google.com/search?cr=countryAU&q="+input$table_cell_clicked
-      #https://www.google.com/search?cr=countryAU&q=St Louis Home Care
-      #https://www.google.com/maps/place/
-      output$selectedCells <- renderPrint(input$table_cell_clicked$value)
-      sstring <- paste("https://www.google.com/search?cr=countryAU&q=", as.character(input$table_cell_clicked$value))
+      observe({
+        req(input$table_cell_clicked)
+        
+        # sstring <- "https://www.google.com/search?cr=countryAU&q="+input$table_cell_clicked
+        #https://www.google.com/search?cr=countryAU&q=St Louis Home Care
+        #https://www.google.com/maps/place/
+        output$selectedCells <- renderPrint(input$table_cell_clicked$value)
+        sstring <- paste("https://www.google.com/search?cr=countryAU&q=", as.character(input$table_cell_clicked$value))
         
         url <- a(as.character(input$table_cell_clicked$value), href= sstring)
-     
+        
         output$tab <- renderUI({
           tagList( HTML("<h3 style='color:white; align ='center'>Search on Google</h3>"), url)
         }) # HTML("<p style='color:blue;'>English</p>"),
@@ -381,164 +378,164 @@ server <- function(input, output) {
         })
         
         
-  
         
         
-       # centersfiltered <- filteredPostcode %>% filter(No == input$table_cell_clicked$value)
-      
-    })
-  
-
-  
-  
-  })
-  
-  
- # output$selectedCells <- renderPrint(input$table_rows_selected)
-  #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')
-  
-  #
-  
-  #
-  
-  #centersfiltered <- centers %>% filter(No == input$table_rows_all)
-  #
-  
-  #postcode leaflet
-  
-   observe({
-     
-     req(input$Postcode)
-     
-  output$sitemap = renderLeaflet(
-    {
-      filteredPostcode2 <- centers %>%
-        filter(
-          Postcode == input$Postcode)
-     
-     # file <- "LogoBlue3.png"
-      #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-      #URL <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-    #  URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
-      
-      filteredPostcode2 <- as.data.frame(filteredPostcode2)
-      leaflet(data=filteredPostcode2) %>% 
-        addTiles() %>%  
-        addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-        #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
-        #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = " ">"))%>%
-       # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL, ">"))%>%
         
-       
-        addEasyButton(easyButton(
-          icon="fa-crosshairs", title="Locate Me",
-          onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
-      
-      
-      #lan
-      observe({
-        # click <- input$rb,input$Postcode,
-        req(input$rbLanguage)
-       
-        
-        #print(click)
-        
-        output$sitemap = renderLeaflet(
-          {
-            
-            if ( input$rbLanguage == "English")
-            {
-              filteredClickLan <- filteredPostcode2
-            }
-            else
-            {
-              
-              filteredClickLan <- filteredPostcode2 %>%
-                filter( grepl(input$rbLanguage, Language) || grepl(input$rbLanguage, Culture)
-                )
-            }
-            filteredClickLan <- as.data.frame(filteredClickLan)
-             # file <- "LogoBlue3.png"
-             # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-            #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
-            
-            #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-            # img(id="img26",src = "allReligion.png", height = 40, width=80),
-            
-            leaflet(data=filteredClickLan) %>% 
-              addTiles() %>%  
-              addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-             #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
-             # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
-              
-              addEasyButton(easyButton(
-                icon="fa-crosshairs", title="Locate Me",
-                onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
-          })
-        
+        # centersfiltered <- filteredPostcode %>% filter(No == input$table_cell_clicked$value)
         
       })
       
-      # religion leaflet
-      observe({
-        # click <- input$rb,input$Postcode,
-        req(input$rbreligion)
-        
-        
-        #print(click)
-        
-        output$sitemap = renderLeaflet(
-          {
+      
+      
+      
+    })
+    
+    
+    # output$selectedCells <- renderPrint(input$table_rows_selected)
+    #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')
+    
+    #
+    
+    #
+    
+    #centersfiltered <- centers %>% filter(No == input$table_rows_all)
+    #
+    
+    #postcode leaflet
+    
+    observe({
+      
+      req(input$Postcode)
+      
+      output$sitemap = renderLeaflet(
+        {
+          filteredPostcode2 <- centers %>%
+            filter(
+              Postcode == input$Postcode)
+          
+          # file <- "LogoBlue3.png"
+          #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
+          #URL <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
+          #  URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
+          
+          filteredPostcode2 <- as.data.frame(filteredPostcode2)
+          leaflet(data=filteredPostcode2) %>% 
+            addTiles() %>%  
+            addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+            #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
+            #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = " ">"))%>%
+            # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL, ">"))%>%
             
-            if ( input$rbreligion == "allReligion")
-            {
-              filteredClickreli2 <- filteredPostcode2
-            }
-            else
-            {
-              
-              filteredClickreli2 <- filteredPostcode2 %>%
-                filter( grepl(input$rbreligion, Religion))
+            
+            addEasyButton(easyButton(
+              icon="fa-crosshairs", title="Locate Me",
+              onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
+          
+          
+          #lan
+          observe({
+            # click <- input$rb,input$Postcode,
+            req(input$rbLanguage)
+            
+            
+            #print(click)
+            
+            output$sitemap = renderLeaflet(
+              {
                 
-            }
-            filteredClickreli2 <- as.data.frame( filteredClickreli2)
-            # file <- "LogoBlue3.png"
-            # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-            #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
-            #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-            #src = "allReligion.png", height = 40, width=80
-            #input$sitemap_marker_click$lat & Longitude == input$sitemap_marker_click$lng
-            ### hear to show pic of place####
-            leaflet(data= filteredClickreli2) %>% addTiles() %>% 
-               addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-              #addTiles() %>%  addMarkers(~Longitude,~Latitude,popup =~paste0("<img src = ", URL, ">"))
-                 
-              addEasyButton(easyButton(
-                icon="fa-crosshairs", title="Locate Me",
-                onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
-              
-              #addMarkers(lng = ~Longitude, ~Latitude, popup = 
-               #            ~paste0('https://www.google.com/maps/dir/', 
-                #                   ~Latitude,",",~Longitude,"/",
-                 #                  ~Latitude,",", 
-                  #                 ~Longitude))%>%
-              #addCircles(lng =  ~Longitude, lat = ~Latitude, popup = ~Name, label = "current location", color = "red", weight = 15)
-          })
-             # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-              #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
-              #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
+                if ( input$rbLanguage == "English") 
+                {
+                  filteredClickLan <- filteredPostcode2
+                }
+                else
+                {
+                  
+                  filteredClickLan <- filteredPostcode2 %>%
+                    filter( grepl(input$rbLanguage, Language ) | grepl(input$rbLanguage, Culture ))
+                    #)
+                }
+                filteredClickLan <- as.data.frame(filteredClickLan)
+                # file <- "LogoBlue3.png"
+                # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
+                #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
+                
+                #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
+                # img(id="img26",src = "allReligion.png", height = 40, width=80),
+                
+                leaflet(data=filteredClickLan) %>% 
+                  addTiles() %>%  
+                  addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+                  #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
+                  # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
+                  
+                  addEasyButton(easyButton(
+                    icon="fa-crosshairs", title="Locate Me",
+                    onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
+              })
+            
             
           })
-        
-        
-      })
+          
+          # religion leaflet
+          observe({
+            # click <- input$rb,input$Postcode,
+            req(input$rbreligion)
+            
+            
+            #print(click)
+            
+            output$sitemap = renderLeaflet(
+              {
+                
+                if ( input$rbreligion == "allReligion")
+                {
+                  filteredClickreli2 <- filteredPostcode2
+                }
+                else
+                {
+                  
+                  filteredClickreli2 <- filteredPostcode2 %>%
+                    filter( grepl(input$rbreligion, Religion))
+                  
+                }
+                filteredClickreli2 <- as.data.frame( filteredClickreli2)
+                # file <- "LogoBlue3.png"
+                # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
+                #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
+                #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
+                #src = "allReligion.png", height = 40, width=80
+                #input$sitemap_marker_click$lat & Longitude == input$sitemap_marker_click$lng
+                ### hear to show pic of place####
+                leaflet(data= filteredClickreli2) %>% addTiles() %>% 
+                  addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+                  #addTiles() %>%  addMarkers(~Longitude,~Latitude,popup =~paste0("<img src = ", URL, ">"))
+                  
+                  addEasyButton(easyButton(
+                    icon="fa-crosshairs", title="Locate Me",
+                    onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
+                
+                #addMarkers(lng = ~Longitude, ~Latitude, popup = 
+                #            ~paste0('https://www.google.com/maps/dir/', 
+                #                   ~Latitude,",",~Longitude,"/",
+                #                  ~Latitude,",", 
+                #                 ~Longitude))%>%
+                #addCircles(lng =  ~Longitude, lat = ~Latitude, popup = ~Name, label = "current location", color = "red", weight = 15)
+              })
+            # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
+            #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
+            #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
+            
+          })
+          
+          
+        })
     })
-    })
-#})
-   
+  })
+  #})
+  
   #click marker dt
   observe({
-   
+    
     req(input$sitemap_marker_click)
     
     
@@ -586,41 +583,41 @@ server <- function(input, output) {
         formatStyle('Postcode', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
         formatStyle('Latitude', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
         formatStyle('Longitude', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
-       
+        
         formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
         formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
     })
     
     #Gmap
-  #  output$myGMap <- renderGoogle_map({
-   #   google_map(location = c(input$sitemap_marker_click$lat, input$sitemap_marker_click$lng), key = key, search_box = T,zoom = 12, split_view = "pano", street_view_control = TRUE,update_map_view = TRUE)
-  #  })
-   
-#https://maps.google.com/maps/contrib/105726604263661011813/photos
-   
+    #  output$myGMap <- renderGoogle_map({
+    #   google_map(location = c(input$sitemap_marker_click$lat, input$sitemap_marker_click$lng), key = key, search_box = T,zoom = 12, split_view = "pano", street_view_control = TRUE,update_map_view = TRUE)
+    #  })
+    
+    #https://maps.google.com/maps/contrib/105726604263661011813/photos
+    
     
     #religion 
   }) 
   
-
-
-
+  
+  
+  
 }
-      
-      #language
-      
-      
-        # map$clearPopups()
-        # map$showPopup(click$latitude, click$longtitude, text)
-  
-    
 
-    
-      
-      # language
-    
-      
-  
+#language
+
+
+# map$clearPopups()
+# map$showPopup(click$latitude, click$longtitude, text)
+
+
+
+
+
+# language
+
+
+
 
 
 shinyApp(ui, server)
