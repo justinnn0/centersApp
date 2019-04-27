@@ -9,6 +9,9 @@ library(leaflet)
 library(datasets)
 library(dplyr)
 library(magrittr)
+library(shinyWidgets)
+
+
 #library(readr)
 
 #install.packages('stringr')
@@ -21,65 +24,66 @@ google_keys()
 centers <- read.csv('GeocodedHomeCare3.csv', encoding="UTF-8", stringsAsFactors=FALSE)
 centers <- as.data.frame(centers)
 
-ui <- fluidPage(tags$head(tags$style(
-  HTML('
-       #sidebar {
-       background-color: white;
-       }
-       
-       body, label, input, button, select { 
-       font-family: "Arial";
-       }'))),
+ui <- fluidPage(
+  
+  tags$head(tags$style(
+    HTML('
+         #sidebar {
+         background-color: #222222;
+         }
+         
+         body, label, input, button, select { 
+         font-family: "Arial";
+         }'))),
   tags$head(tags$style(
     type="text/css",
     "#img img {max-width: 100%; width: 100%; height: auto}"
-  )),
-  
+    )),
+                                           
   
   sidebarLayout(
     
+    #tags$head(tags$style(HTML('background-color: #222222'))),
     
-    sidebarPanel(id="sidebar",
+    sidebarPanel(id="sidebar",setBackgroundColor("#222222"),
                  
-               #  img(id="img",src = "LogoBlue3.png", height = 300, width=400),
-              
-                 
-                 
-               
-               radioButtons("rbLanguage", "Culture & Language:",
+               radioButtons("rbLanguage",  HTML("<h3 style='color:white;'>Culture & Language:</h3>"),
                             choiceNames = list(
-                              img(id="img9",src = "English.png", height = 40, width=80),
-                              img(id="img10",src = "Italian.png", height = 40, width=80),
-                              img(id="img11",src = "Chinese.png", height = 40, width=80),
-                              img(id="img12",src = "Indian.png", height = 40, width=80),
-                              img(id="img13",src = "Russian.png", height = 40, width=80),
-                              img(id="img14",src = "German.png", height = 40, width=80),
-                              img(id="img15",src = "Greek.png", height = 40, width=80),
-                              img(id="img16",src = "Vietnam.png", height = 40, width=80)
                               
+                              HTML("<p style='color:white;'>English</p>"),
+                              HTML("<p style='color:white;'>中文</p>"),
+                              HTML("<p style='color:white;'>Italiano</p>"),
+                              HTML("<p style='color:white;'>हिंदी</p>"),
+                              HTML("<p style='color:white;'>Русский</p>"),
+                              HTML("<p style='color:white;'>Deutsche</p>"),
+                              HTML("<p style='color:white;'>Ελληνικά</p>"),
+                              HTML("<p style='color:white;'> Tiếng Việt</p>"),
+                              HTML("<p style='color:white;'>日本語</p>"), 
+                              HTML("<p style='color:white;'>한국어</p>"),
+                              HTML("<p style='color:white;'>Español</p>"),
+                              HTML("<p style='color:white;'> français</p>"),
+                              HTML("<p style='color:white;'> عربى</p>"),
+                              HTML("<p style='color:white;'>All</p>")
+                              #img(id="img9",src = "English.png", height = 40, width=80),
+                              #img(id="img10",src = "Italian.png", height = 40, width=80),
+                              #img(id="img11",src = "Chinese.png", height = 40, width=80),
                             ),
-                            
-                            
                             choiceValues = list(
-                              "English", "Italian", "Chinese","Indian", "Russian", "German","Greek","Vietnamese"
+                              "English", "Chinese", "Italian","Hindi", "Russian", "German","Greek","Vietnamese","Japanese","Korean","Spanish","French","Arabic","English"
                             ),selected="English"
                ),
-               radioButtons("rbreligion", "Religion:",
+               radioButtons("rbreligion",  HTML("<h3 style='color:white;'>Religion:</h3>"),
                             choiceNames = list(
-                              img(id="img26",src = "allReligion.png", height = 40, width=80),
-                              img(id="img17",src = "Catholic.png", height = 40, width=80),
-                              img(id="img18",src = "Buddism.png", height = 40, width=80),
-                              img(id="img19",src = "Islam.png", height = 40, width=80),
-                              img(id="img20",src = "Judaism.png", height = 40, width=80),
-                              img(id="img21",src = "Hinduism.png", height = 40, width=80),
-                              img(id="img22",src = "Eastern_orthodox.png", height = 40, width=80),
-                              #img(id="img23",src = "UnitingChurch", height = 40, width=80),
-                              #img(id="img24",src = "Anglican", height = 40, width=80),
-                              img(id="img25",src = "Lutheran.png", height = 40, width=80)
-                             
-                             
-                              
-                            ),
+                              HTML('<img id="img26" src="allReligion.png" height=40 px width=80 px"><label style="color:white">All</label></img>'),
+                              HTML('<img id="img26" src="Catholic.png" height=40 px width=80 px"><label style="color:white">Catholic</label></img>'),
+                              HTML('<img id="img26" src="Buddism.png" height=40 px width=80 px"><label style="color:white">Buddism</label></img>'),
+                              HTML('<img id="img26" src="Islam.png" height=40 px width=80 px"><label style="color:white">Islam</label></img>'),
+                              HTML('<img id="img26" src="Judaism.png" height=40 px width=80 px"><label style="color:white">Judaism</label></img>'),
+                              HTML('<img id="img26" src="Hinduism.png" height=40 px width=80 px"><label style="color:white">Hinduism</label></img>'),
+                              HTML('<img id="img26" src="Eastern_orthodox.png" height=40 px width=80 px"><label style="color:white">Eastern orthodox</label></img>'),
+                              HTML('<img id="img26" src="Lutheran.png" height=40 px width=80 px"><label style="color:white">Lutheran</label></img>')
+
+                              ),
                             
                             
                             choiceValues = list(
@@ -91,13 +95,15 @@ ui <- fluidPage(tags$head(tags$style(
                 
 
 ),
-          
+
                  
                  #h3( em("Home Care Centers in Australia"), align = "center")
-                # h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman")
+                 #h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),
                 # h4("1: Select or enter your postcode.",align = "left",style = "color:navy",font="Times New Roman"),
                 
-                # h4("Click + to see the detailed information.",align = "left",style = "color:navy",font="Times New Roman"),
+                # h4("1: Click + to see the detailed information.",align = "left",style = "color:navy",font="Times New Roman"),
+                # h4("2: To search for other culture and religion just type in the search box below the the map",align = "left",style = "color:navy",font="Times New Roman"),
+                 
                  
                  
                 # h4("3: You can search by culture, language, religion, and services. Just type in the search box (case sensitive). Examples: ",align = "left",style = "color:navy",font="Times New Roman"),
@@ -118,7 +124,7 @@ ui <- fluidPage(tags$head(tags$style(
      
       column(4,
              selectInput("Postcode",
-                         "Postcode:",
+                         HTML("<h3 style='color:white;'>Postcode</h3>"),
                          c(
                            sort(unique(as.character(centers$Postcode)))),selected =2000),
              align='center'),align='center'),
@@ -128,12 +134,16 @@ ui <- fluidPage(tags$head(tags$style(
       
       
       DT::dataTableOutput("table"),
-      h4( em("Select a name or address from the above table to search on Google"), align = "left",style = "color:navy",font="Times New Roman"),
-      uiOutput(outputId = "ggoogle"),
+      h3("Click and select a name or address from the above table to search on Google", align = "left",style = "color:white",font="Times New Roman"),
+     # uiOutput(outputId = "ggoogle"),
       
-      uiOutput("tab"),
-      uiOutput(outputId = "ggmap"),
-      uiOutput("tabggmap")
+     # uiOutput("tab"),
+      fluidRow( 
+        column(6, uiOutput("tab"),uiOutput(outputId = "ggoogle")),
+        column(6,uiOutput("tabggmap"),uiOutput(outputId = "ggmap")
+               )) 
+     # uiOutput(outputId = "ggmap"),
+      #uiOutput("tabggmap")
        #verbatimTextOutput("selectedCells")
       #box(google_mapOutput("myGMap") )
       
@@ -180,8 +190,11 @@ server <- function(input, output) {
       #dom = 'Bfrtip',
       #searchHighlight = TRUE
       
+      
       options = list(
-        columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+        searching=FALSE,
+        
+       # columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
         scrollX = TRUE,
         dom = 'Bfrtip',
         pageLength=5,
@@ -239,9 +252,11 @@ server <- function(input, output) {
           #filter = 'top',
           #dom = 'Bfrtip',
           #searchHighlight = TRUE
+         
           
           options = list(
-            columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+            searching= FALSE,
+            #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
             scrollX = TRUE,
             dom = 'Bfrtip',
             pageLength=5,
@@ -309,8 +324,10 @@ server <- function(input, output) {
           #dom = 'Bfrtip',
           #searchHighlight = TRUE
           
+          
           options = list(
-            columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+            searching= FALSE,
+            #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
             scrollX = TRUE,
             dom = 'Bfrtip',
             pageLength=5,
@@ -352,14 +369,15 @@ server <- function(input, output) {
       sstring <- paste("https://www.google.com/search?cr=countryAU&q=", as.character(input$table_cell_clicked$value))
         
         url <- a(as.character(input$table_cell_clicked$value), href= sstring)
+     
         output$tab <- renderUI({
-          tagList( "Search", url)
-        })
+          tagList( HTML("<h3 style='color:white; align ='center'>Search on Google</h3>"), url)
+        }) # HTML("<p style='color:blue;'>English</p>"),
         
         sstring2 <- paste("https://www.google.com/maps/place/", as.character(input$table_cell_clicked$value))
         url2 <- a(as.character(input$table_cell_clicked$value), href= sstring2)
         output$tabggmap <- renderUI({
-          tagList( "Search", url2)
+          tagList(HTML("<h3 style='color:white; align ='center'>Search on Google Map</h3>"), url2)
         })
         
         
@@ -542,8 +560,10 @@ server <- function(input, output) {
         #dom = 'Bfrtip',
         #searchHighlight = TRUE
         
+        
         options = list(
-          columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+          searching= FALSE,
+          #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
           scrollX = TRUE,
           dom = 'Bfrtip',
           pageLength=5,
