@@ -48,6 +48,7 @@ ui <- fluidPage(
                  
                  radioButtons("rbLanguage",  HTML("<h3 style='color:white;'>Culture & Language:</h3>"),
                               choiceNames = list(
+                               
                                 HTML("<p style='color:white;'>English</p>"),
                                 HTML("<p style='color:white;'>中文</p>"),
                                 HTML("<p style='color:white;'>Italiano</p>"),
@@ -60,14 +61,15 @@ ui <- fluidPage(
                                 HTML("<p style='color:white;'>한국어</p>"),
                                 HTML("<p style='color:white;'>Español</p>"),
                                 HTML("<p style='color:white;'> français</p>"),
-                                HTML("<p style='color:white;'> عربى</p>")
+                                HTML("<p style='color:white;'> عربى</p>"),
+                                HTML("<p style='color:white;'>All</p>")
                                 #  HTML("<p style='color:white;'>All</p>")
                                 #img(id="img9",src = "English.png", height = 40, width=80),
                                 #img(id="img10",src = "Italian.png", height = 40, width=80),
                                 #img(id="img11",src = "Chinese.png", height = 40, width=80),
                               ),
                               choiceValues = list(
-                                "English","Chinese","Italian","Hindi","Russian","German","Greek","Vietnamese","Japanese","Korean","Spanish","French","Arabic"
+                                "English","Chinese","Italian","Hindi","Russian","German","Greek","Vietnamese","Japanese","Korean","Spanish","French","Arabic","English"
                               ),selected="English"
                  ),
                  radioButtons("rbreligion",  HTML("<h3 style='color:white;'>Religion:</h3>"),
