@@ -43,35 +43,38 @@ ui <- fluidPage(
   sidebarLayout(
     
     #tags$head(tags$style(HTML('background-color: #222222'))),
+    #setBackgroundColor("#222222")
     
     sidebarPanel(id="sidebar",setBackgroundColor("#222222"),
+                 fluidRow(
+                   column(12,
+                          selectInput("Postcode",
+                                      HTML("<h3 style='color:white;'>Enter or select a postcode</h3>"),
+                                      c(
+                                        sort(unique(as.character(centers$Postcode)))),selected =2000),
+                          align='left'),align='left'),
+            
                  
-                 radioButtons("rbLanguage",  HTML("<h3 style='color:white;'>Culture & Language:</h3>"),
-                              choiceNames = list(
+                 
+                 selectInput("rbLanguage", HTML("<h3 style='color:white;'>Culture & Language the care center provides:</h3>"), 
+                             c("English" = "English", 
+                                "中文" = "Chinese" ,
+                               "Italiano" = "Italian",
+                               "हिन्दी " = "Hindi",
+                               "Русский" = "Russian",
+                               "Deutsche"="German", 
+                               "Ελληνικά" = "Greek",
+                               "Tiếng Việt"="Vietnamese",
+                               "日本語" =  "Japanese",
+                               "한국어" = "Korean",
+                               "Español" = "Spanish", 
+                               "français" = "French",
+                               " عربى" = "Arabic" 
                                
-                                HTML("<p style='color:white;'>English</p>"),
-                                HTML("<p style='color:white;'>中文</p>"),
-                                HTML("<p style='color:white;'>Italiano</p>"),
-                                HTML("<p style='color:white;'>हिंदी</p>"),
-                                HTML("<p style='color:white;'>Русский</p>"),
-                                HTML("<p style='color:white;'>Deutsche</p>"),
-                                HTML("<p style='color:white;'>Ελληνικά</p>"),
-                                HTML("<p style='color:white;'> Tiếng Việt</p>"),
-                                HTML("<p style='color:white;'>日本語</p>"), 
-                                HTML("<p style='color:white;'>한국어</p>"),
-                                HTML("<p style='color:white;'>Español</p>"),
-                                HTML("<p style='color:white;'> français</p>"),
-                                HTML("<p style='color:white;'> عربى</p>"),
-                                HTML("<p style='color:white;'>All</p>")
-                                #  HTML("<p style='color:white;'>All</p>")
-                                #img(id="img9",src = "English.png", height = 40, width=80),
-                                #img(id="img10",src = "Italian.png", height = 40, width=80),
-                                #img(id="img11",src = "Chinese.png", height = 40, width=80),
-                              ),
-                              choiceValues = list(
-                                "English","Chinese","Italian","Hindi","Russian","German","Greek","Vietnamese","Japanese","Korean","Spanish","French","Arabic","English"
-                              ),selected="English"
+                               ),selected = "English"
                  ),
+                
+                 
                  radioButtons("rbreligion",  HTML("<h3 style='color:white;'>Religion:</h3>"),
                               choiceNames = list(
                                 HTML('<img id="img26" src="allReligion.png" height=40 px width=80 px"><label style="color:white">All</label></img>'),
@@ -89,7 +92,10 @@ ui <- fluidPage(
                               choiceValues = list(
                                 "allReligion","Catholic", "Buddism", "Islam","Judaism", "Hinduism", "Eastern Orthodox","Lutheran"
                               ),selected="allReligion"
-                 )
+                 ),
+                 br(),
+                 
+                 h4( em("Tips: If no data matches your selection criteria, please select 'Englsih' for culture & language and 'All' for religion. Then contact the home care centers for detailed information.") , align = "left",style = "color:lightBlue",font="Times New Roman")
                  
                  
                  
@@ -98,7 +104,6 @@ ui <- fluidPage(
     
     
     #h3( em("Home Care Centers in Australia"), align = "center")
-    #h3( em("Tips:") , align = "left",style = "color:Black",font="Times New Roman"),
     # h4("1: Select or enter your postcode.",align = "left",style = "color:navy",font="Times New Roman"),
     
     # h4("1: Click + to see the detailed information.",align = "left",style = "color:navy",font="Times New Roman"),
@@ -120,28 +125,19 @@ ui <- fluidPage(
     
     mainPanel(
       
-      fluidRow(
-        
-        column(4,
-               selectInput("Postcode",
-                           HTML("<h3 style='color:white;'>Postcode</h3>"),
-                           c(
-                             sort(unique(as.character(centers$Postcode)))),selected =2000),
-               align='center'),align='center'),
-      
+      br(),
+     
       leafletOutput("sitemap"),
       
-      
-      
       DT::dataTableOutput("table"),
-      h3("Click and select a name or address from the above table to search on Google", align = "left",style = "color:white",font="Times New Roman"),
+      tags$head(tags$style("#table {background-color: white; }", media="screen", type="text/css")),
+      h4(em("Click and select a name or address from the above table to search on Google", align = "left",style = "color:lightBlue",font="Times New Roman")),
       # uiOutput(outputId = "ggoogle"),
-      
       # uiOutput("tab"),
       fluidRow( 
-        column(6, uiOutput("tab"),uiOutput(outputId = "ggoogle")),
-        column(6,uiOutput("tabggmap"),uiOutput(outputId = "ggmap")
-        )) 
+        column(6, uiOutput("tab"))
+        #column(6,uiOutput("tabggmap"))
+        )
       # uiOutput(outputId = "ggmap"),
       #uiOutput("tabggmap")
       #verbatimTextOutput("selectedCells")
@@ -155,12 +151,17 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
+
+  
   output$ggmap <- renderUI({
-    tags$img(src = "ggmap.png")
+    
+    tags$img(HTML('<img id="img35" src="ggmap.png" height=150 px width=150 px"><label style="color:white"></label></img>'))
+    
   })
   
   output$ggoogle <- renderUI({
-    tags$img(src = "ggoogle.png")
+    tags$img(HTML('<img id="img36" src="ggoogle.png" height=150 px width=150 px"><label style="color:white"></label></img>'))
+    
   })
   
   
@@ -195,8 +196,9 @@ server <- function(input, output) {
           searching=FALSE,
           
           # columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+          columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
           scrollX = TRUE,
-          dom = 'Bfrtip',
+          dom = 'Bfrtp',
           pageLength=5,
           buttons = c('copy','pdf', 'print'),deferRender = TRUE,
           scrollY = 200,
@@ -256,8 +258,9 @@ server <- function(input, output) {
             options = list(
               searching= FALSE,
               #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+              columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
               scrollX = TRUE,
-              dom = 'Bfrtip',
+              dom = 'Bfrtp',
               pageLength=5,
               buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
               scrollY = 150,
@@ -327,8 +330,9 @@ server <- function(input, output) {
             options = list(
               searching= FALSE,
               #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+              columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
               scrollX = TRUE,
-              dom = 'Bfrtip',
+              dom = 'Bfrtp',
               pageLength=5,
               buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
               scrollY = 150,
@@ -367,21 +371,22 @@ server <- function(input, output) {
         output$selectedCells <- renderPrint(input$table_cell_clicked$value)
         sstring <- paste("https://www.google.com/search?cr=countryAU&q=", as.character(input$table_cell_clicked$value))
         
-        url <- a(as.character(input$table_cell_clicked$value), href= sstring)
+       url <- a(as.character(input$table_cell_clicked$value), href= sstring,target="_blank")
         
         output$tab <- renderUI({
           tagList( HTML("<h3 style='color:white; align ='center'>Search on Google</h3>"), url)
         }) # HTML("<p style='color:blue;'>English</p>"),
         
         sstring2 <- paste("https://www.google.com/maps/place/", as.character(input$table_cell_clicked$value))
-        url2 <- a(as.character(input$table_cell_clicked$value), href= sstring2)
+       # url2 <- a(as.character(input$table_cell_clicked$value), href= sstring2)
+        url2 <- a(as.character(input$table_cell_clicked$value), href= sstring2, target="_blank")
         output$tabggmap <- renderUI({
           tagList(HTML("<h3 style='color:white; align ='center'>Search on Google Map</h3>"), url2)
         })
         
         
         
-        
+        # https://www.google.com/search?cr=countryAU&q=monash
         
         # centersfiltered <- filteredPostcode %>% filter(No == input$table_cell_clicked$value)
         
@@ -563,8 +568,9 @@ server <- function(input, output) {
         options = list(
           searching= FALSE,
           #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
+          columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
           scrollX = TRUE,
-          dom = 'Bfrtip',
+          dom = 'Bfrtp',
           pageLength=5,
           buttons = c('copy', 'pdf', 'print'),deferRender = TRUE,
           scrollY = 150,
