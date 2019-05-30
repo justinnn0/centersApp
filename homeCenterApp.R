@@ -11,15 +11,6 @@ library(magrittr)
 library(shinyWidgets)
 
 
-#library(readr)
-
-#install.packages('stringr')
-#txt.tmp <- str_replace_all(conteudo_do_tweet,"[^[:graph:]]", " ") 
-
-key <- "AIzaSyAOUAfjByh7eSEVrv2ygMRrZo6MHLUB5og"
-set_key(key = key)
-google_keys()
-
 centers <- read.csv('GeocodedHomeCare3.csv', encoding="UTF-8", stringsAsFactors=FALSE)
 centers <- as.data.frame(centers)
 
@@ -42,9 +33,6 @@ ui <- fluidPage(
   
   sidebarLayout(
     
-    #tags$head(tags$style(HTML('background-color: #222222'))),
-    #setBackgroundColor("#222222")
-    
     sidebarPanel(id="sidebar",setBackgroundColor("#222222"),
                  fluidRow(
                    column(12,
@@ -54,8 +42,6 @@ ui <- fluidPage(
                                         sort(unique(as.character(centers$Postcode)))),selected =2000),
                           align='left'),align='left'),
             
-                 
-                 
                  selectInput("rbLanguage", HTML("<h3 style='color:white;'>Culture & Language the care center provides:</h3>"), 
                              c("English" = "English", 
                                 "中文" = "Chinese" ,
@@ -73,8 +59,6 @@ ui <- fluidPage(
                                
                                ),selected = "English"
                  ),
-                
-                 
                  radioButtons("rbreligion",  HTML("<h3 style='color:white;'>Religion:</h3>"),
                               choiceNames = list(
                                 HTML('<img id="img26" src="allReligion.png" height=40 px width=80 px"><label style="color:white">All</label></img>'),
@@ -88,7 +72,6 @@ ui <- fluidPage(
                                 
                               ),
                               
-                              
                               choiceValues = list(
                                 "allReligion","Catholic", "Buddism", "Islam","Judaism", "Hinduism", "Eastern Orthodox","Lutheran"
                               ),selected="allReligion"
@@ -97,31 +80,7 @@ ui <- fluidPage(
                  
                  h4( em("Tips: If no data matches your selection criteria, please select 'Englsih' for culture & language and 'All' for religion. Then contact the home care centers for detailed information.") , align = "left",style = "color:lightBlue",font="Times New Roman")
                  
-                 
-                 
-                 
     ),
-    
-    
-    #h3( em("Home Care Centers in Australia"), align = "center")
-    # h4("1: Select or enter your postcode.",align = "left",style = "color:navy",font="Times New Roman"),
-    
-    # h4("1: Click + to see the detailed information.",align = "left",style = "color:navy",font="Times New Roman"),
-    # h4("2: To search for other culture and religion just type in the search box below the the map",align = "left",style = "color:navy",font="Times New Roman"),
-    
-    
-    
-    # h4("3: You can search by culture, language, religion, and services. Just type in the search box (case sensitive). Examples: ",align = "left",style = "color:navy",font="Times New Roman"),
-    
-    #  h5("- Italian",align = "left",style = "color:navy",font="Times New Roman"),
-    # h5("- Catholic",align = "left",style = "color:navy",font="Times New Roman"),
-    
-    #  h5("- Dementia",align = "left",style = "color:navy",font="Times New Roman"),
-    #  h5("- Dementia Spanish",align = "left",style = "color:navy",font="Times New Roman"),
-    
-    
-    #  h4("4: You can export your search results by choosing Copy, CSV, Excel, PDF, Print.",align = "left",style = "color:navy",font="Times New Roman")),
-    
     
     mainPanel(
       
@@ -132,48 +91,20 @@ ui <- fluidPage(
       DT::dataTableOutput("table"),
       tags$head(tags$style("#table {background-color: white; }", media="screen", type="text/css")),
       h4(em("Click and select a name or address from the above table to search on Google", align = "left",style = "color:lightBlue",font="Times New Roman")),
-      # uiOutput(outputId = "ggoogle"),
-      # uiOutput("tab"),
       fluidRow( 
         column(6, uiOutput("tab"))
-        #column(6,uiOutput("tabggmap"))
-        )
-      # uiOutput(outputId = "ggmap"),
-      #uiOutput("tabggmap")
-      #verbatimTextOutput("selectedCells")
-      #box(google_mapOutput("myGMap") )
-      
-      
     )  
     
   )
-  )
+  ))
 
 server <- function(input, output) {
   
-
-  
-  output$ggmap <- renderUI({
-    
-    tags$img(HTML('<img id="img35" src="ggmap.png" height=150 px width=150 px"><label style="color:white"></label></img>'))
-    
-  })
-  
-  output$ggoogle <- renderUI({
-    tags$img(HTML('<img id="img36" src="ggoogle.png" height=150 px width=150 px"><label style="color:white"></label></img>'))
-    
-  })
-  
-  
-  
-  #
-  #postcode click, datatable
+  # Below is the code for datatable.
+  # Observe the event of postcode being selected or entered, then filter the data according to the selection
   observe({
     
     req(input$Postcode)
-    
-    
-    
     output$table <- DT::renderDataTable({
       
       filteredPostcode <- centers %>%
@@ -185,17 +116,8 @@ server <- function(input, output) {
         selection='single',
         extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
         rownames=FALSE,
-        #fixedHeader = TRUE,keys = TRUE,
-        #options = list(searchHighlight = TRUE)
-        #filter = 'top',
-        #dom = 'Bfrtip',
-        #searchHighlight = TRUE
-        
-        
         options = list(
           searching=FALSE,
-          
-          # columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
           columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
           scrollX = TRUE,
           dom = 'Bfrtp',
@@ -208,7 +130,7 @@ server <- function(input, output) {
             "function(settings, json) {",
             "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
             "}")
-        )
+        )   # Formatting each column.
       ) %>%formatStyle('Name', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
         formatStyle('Address', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
         formatStyle('Culture', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman") %>%
@@ -223,7 +145,7 @@ server <- function(input, output) {
         formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
         formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
       
-      
+      # Observe the event of language being selected or entered, then filter the data according to the selection.
       observe({
         
         req(input$rbLanguage)
@@ -231,13 +153,13 @@ server <- function(input, output) {
         
         output$table <- DT::renderDataTable({
           
-          if ( input$rbLanguage == "English")
+          if ( input$rbLanguage == "English") # No need to filter if English is selected 
           {
-            filteredClickLan <- filteredPostcode
+            filteredClickLan <- filteredPostcode  
           }
           else
           {
-            
+            # Filter by language and culture based on the data filtered by postcode
             filteredClickLan <- filteredPostcode %>%
               filter( grepl(input$rbLanguage, Language ) | grepl(input$rbLanguage, Culture ))              
           }
@@ -248,16 +170,8 @@ server <- function(input, output) {
             selection='single',
             extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
             rownames=FALSE,
-            #fixedHeader = TRUE,keys = TRUE,
-            #options = list(searchHighlight = TRUE)
-            #filter = 'top',
-            #dom = 'Bfrtip',
-            #searchHighlight = TRUE
-            
-            
             options = list(
               searching= FALSE,
-              #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
               columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
               scrollX = TRUE,
               dom = 'Bfrtp',
@@ -286,14 +200,11 @@ server <- function(input, output) {
             formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
         })
         
-        # google map
-        #
-        
         
         
       })
       
-      #religion dt
+      # Observe the event of religion being selected or entered, then filter the data according to the selection.
       
       observe({
         
@@ -320,16 +231,8 @@ server <- function(input, output) {
             selection='single',
             extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
             rownames=FALSE,
-            #fixedHeader = TRUE,keys = TRUE,
-            #options = list(searchHighlight = TRUE)
-            #filter = 'top',
-            #dom = 'Bfrtip',
-            #searchHighlight = TRUE
-            
-            
             options = list(
               searching= FALSE,
-              #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
               columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
               scrollX = TRUE,
               dom = 'Bfrtp',
@@ -360,14 +263,9 @@ server <- function(input, output) {
         
       })
       
-      # dt cell - google map 
-      
+ # Observe the event of a cell in the datatable being selected, then pass the value in the cell to google search
       observe({
         req(input$table_cell_clicked)
-        
-        # sstring <- "https://www.google.com/search?cr=countryAU&q="+input$table_cell_clicked
-        #https://www.google.com/search?cr=countryAU&q=St Louis Home Care
-        #https://www.google.com/maps/place/
         output$selectedCells <- renderPrint(input$table_cell_clicked$value)
         sstring <- paste("https://www.google.com/search?cr=countryAU&q=", as.character(input$table_cell_clicked$value))
         
@@ -375,40 +273,20 @@ server <- function(input, output) {
         
         output$tab <- renderUI({
           tagList( HTML("<h3 style='color:white; align ='center'>Search on Google</h3>"), url)
-        }) # HTML("<p style='color:blue;'>English</p>"),
+        }) 
         
         sstring2 <- paste("https://www.google.com/maps/place/", as.character(input$table_cell_clicked$value))
-       # url2 <- a(as.character(input$table_cell_clicked$value), href= sstring2)
         url2 <- a(as.character(input$table_cell_clicked$value), href= sstring2, target="_blank")
         output$tabggmap <- renderUI({
           tagList(HTML("<h3 style='color:white; align ='center'>Search on Google Map</h3>"), url2)
         })
         
-        
-        
-        # https://www.google.com/search?cr=countryAU&q=monash
-        
-        # centersfiltered <- filteredPostcode %>% filter(No == input$table_cell_clicked$value)
-        
       })
       
-      
-      
-      
     })
+    # Below is the code for the map, the same filtering approaches as above.
     
-    
-    # output$selectedCells <- renderPrint(input$table_rows_selected)
-    #%>%formatStyle(colnames(centers)[1:ncol(centers)], backgroundColor = 'lightyellow', fontWeight = 'bold')
-    
-    #
-    
-    #
-    
-    #centersfiltered <- centers %>% filter(No == input$table_rows_all)
-    #
-    
-    #postcode leaflet
+    # Observe the event of postcode being selected, then filter the data accordingly.
     
     observe({
       
@@ -419,34 +297,19 @@ server <- function(input, output) {
           filteredPostcode2 <- centers %>%
             filter(
               Postcode == input$Postcode)
-          
-          # file <- "LogoBlue3.png"
-          #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-          #URL <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-          #  URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
-          
           filteredPostcode2 <- as.data.frame(filteredPostcode2)
           leaflet(data=filteredPostcode2) %>% 
             addTiles() %>%  
             addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-            #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
-            #addMarkers(~Longitude,~Latitude,popup = paste0("<img src = " ">"))%>%
-            # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL, ">"))%>%
-            
-            
             addEasyButton(easyButton(
               icon="fa-crosshairs", title="Locate Me",
               onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
           
           
-          #lan
+  # Observe the event of language being selected, then filter the data accordingly.
+
           observe({
-            # click <- input$rb,input$Postcode,
             req(input$rbLanguage)
-            
-            
-            #print(click)
-            
             output$sitemap = renderLeaflet(
               {
                 
@@ -459,21 +322,12 @@ server <- function(input, output) {
                   
                   filteredClickLan <- filteredPostcode2 %>%
                     filter( grepl(input$rbLanguage, Language ) | grepl(input$rbLanguage, Culture ))
-                    #)
                 }
                 filteredClickLan <- as.data.frame(filteredClickLan)
-                # file <- "LogoBlue3.png"
-                # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-                #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
-                
-                #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-                # img(id="img26",src = "allReligion.png", height = 40, width=80),
                 
                 leaflet(data=filteredClickLan) %>% 
                   addTiles() %>%  
                   addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-                  #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
-                  # addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
                   
                   addEasyButton(easyButton(
                     icon="fa-crosshairs", title="Locate Me",
@@ -483,14 +337,10 @@ server <- function(input, output) {
             
           })
           
-          # religion leaflet
+# Observe the event of religion being selected, then filter the data accordingly.
+          
           observe({
-            # click <- input$rb,input$Postcode,
             req(input$rbreligion)
-            
-            
-            #print(click)
-            
             output$sitemap = renderLeaflet(
               {
                 
@@ -506,46 +356,24 @@ server <- function(input, output) {
                   
                 }
                 filteredClickreli2 <- as.data.frame( filteredClickreli2)
-                # file <- "LogoBlue3.png"
-                # file <- 'https://geo2.ggpht.com/maps/photothumb/fd/v1?bpb=ChAKDnNlYXJjaC5UQUNUSUxFEloKTAlnqWnCPq4SaxFWAZtg-PjYbRo4CxDThbhCGi8aLQoWChQKEglnqWnCPq4SaxEnZndM2yWJJRITU3VpdGUgMTkwNCBMZXZlbCAxOQwqCg0AAAAAFQAAAAAaBgjwARCYAw&gl=AU'
-                #URL <- 'https://geo3.ggpht.com/cbk?panoid=roUHjoCgoaEWmTA0xFoNQA&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=240&yaw=278.6541&pitch=0&thumbfov=100'
-                #centersfiltered <- filteredPostcode2  %>% filter(No == input$table_rows_selected)
-                #src = "allReligion.png", height = 40, width=80
-                #input$sitemap_marker_click$lat & Longitude == input$sitemap_marker_click$lng
-                ### hear to show pic of place####
                 leaflet(data= filteredClickreli2) %>% addTiles() %>% 
                   addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-                  #addTiles() %>%  addMarkers(~Longitude,~Latitude,popup =~paste0("<img src = ", URL, ">"))
-                  
                   addEasyButton(easyButton(
                     icon="fa-crosshairs", title="Locate Me",
                     onClick=JS("function(btn, map){ map.locate({setView: true}); }")))
-                
-                #addMarkers(lng = ~Longitude, ~Latitude, popup = 
-                #            ~paste0('https://www.google.com/maps/dir/', 
-                #                   ~Latitude,",",~Longitude,"/",
-                #                  ~Latitude,",", 
-                #                 ~Longitude))%>%
-                #addCircles(lng =  ~Longitude, lat = ~Latitude, popup = ~Name, label = "current location", color = "red", weight = 15)
               })
-            # addMarkers(~Longitude,~Latitude,popup=~as.character(Name))%>%
-            #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", file, ">"))%>%
-            #  addMarkers(~Longitude,~Latitude,popup = paste0("<img src = ", ~URL ,">"))%>%
-            
           })
           
           
         })
     })
   })
-  #})
   
-  #click marker dt
+  # Observe the event of a maker on the map being clicked, then show the data on the datatable.
+  
   observe({
     
     req(input$sitemap_marker_click)
-    
-    
     output$table <- DT::renderDataTable({
       filteredClick <- centers %>%
         filter(
@@ -558,16 +386,8 @@ server <- function(input, output) {
         selection='single',
         extensions = c('Responsive','Buttons','FixedHeader','Scroller','KeyTable','FixedColumns'),
         rownames=FALSE,
-        #fixedHeader = TRUE,keys = TRUE,
-        #options = list(searchHighlight = TRUE)
-        #filter = 'top',
-        #dom = 'Bfrtip',
-        #searchHighlight = TRUE
-        
-        
         options = list(
           searching= FALSE,
-          #columnDefs = list(list(targets = c(0,1,8,9,10,11,12), searchable = FALSE)),
           columnDefs = list(list(visible=FALSE, targets=c(10,11,12))),
           scrollX = TRUE,
           dom = 'Bfrtp',
@@ -595,38 +415,12 @@ server <- function(input, output) {
         formatStyle('Website', backgroundColor = 'white', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")%>%
         formatStyle('ID', backgroundColor = 'lightblue', fontWeight = 'bold',`font-size` = '18px',font="Times New Roman")
     })
-    
-    #Gmap
-    #  output$myGMap <- renderGoogle_map({
-    #   google_map(location = c(input$sitemap_marker_click$lat, input$sitemap_marker_click$lng), key = key, search_box = T,zoom = 12, split_view = "pano", street_view_control = TRUE,update_map_view = TRUE)
-    #  })
-    
-    #https://maps.google.com/maps/contrib/105726604263661011813/photos
-    
-    
-    #religion 
   }) 
   
   
   
   
 }
-
-#language
-
-
-# map$clearPopups()
-# map$showPopup(click$latitude, click$longtitude, text)
-
-
-
-
-
-# language
-
-
-
-
 
 shinyApp(ui, server)
 
